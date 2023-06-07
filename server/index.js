@@ -9,10 +9,25 @@ app.use(pino);
 app.set('port', (process.env.PORT || 8081));
 
 app.get('/api/greeting', (req, res) => {
-  const name = req.query.name || 'catalogue World';
-  res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({ greeting: `Hello ${name}!` }));
+  try {
+    const name = req.query.name || 'catalogue World';
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ greeting: `Hello ${name}!` }));
+  } catch (error) {
+    var errMessage = `${error}`;
+    processErrorResponse(res, 500, errMessage);    
+  }
 });
+
+function processErrorResponse(res, statusCode, message) {
+	console.log(`${statusCode} ${message}`);
+	res.status(statusCode).send({
+		error: {
+			status: statusCode,
+			message: message
+		},
+	});
+}
 
 app.listen(app.get('port'), () =>
   console.log('Express server is running on', app.get('port'))
