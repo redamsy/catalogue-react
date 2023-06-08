@@ -1,13 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-// const pino = require('express-pino-logger')();
+const pino = require('express-pino-logger')();
+const cors = require("cors");
 
 const app = express();
-app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(pino);
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(pino);
 
-app.set('port', (process.env.PORT || 8081));
+app.set('port', (process.env.PORT || 3001));
 
 app.get('/api/greeting', (req, res) => {
   try {
