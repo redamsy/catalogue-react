@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 
 app.set('port', (process.env.PORT || 8081));
 
-app.get('/server/greeting', (req, res) => {
+app.get('/api/greeting', (req, res) => {
   try {
     console.log("app.js: req", req);
     console.log("app.js: req.query", req.query);
