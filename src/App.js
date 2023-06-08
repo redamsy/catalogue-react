@@ -19,7 +19,7 @@ class App extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    fetch(`/api/greeting?name=${encodeURIComponent(this.state.name)}`, {headers: { 'Content-Type': 'application/json', 'Accept': 'application/json'}})
+    fetch(`/api/greeting?name=${encodeURIComponent(this.state.name)}`)
       .then(response => response.json())
       .then(state => this.setState(state));
   }

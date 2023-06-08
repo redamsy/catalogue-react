@@ -6,7 +6,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(pino);
 
-app.set('port', (process.env.PORT || 8081));
+app.set('port', (process.env.PORT || 3001));
 
 app.get('/api/greeting', (req, res) => {
   try {
