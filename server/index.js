@@ -7,7 +7,7 @@ app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(pino);
 
-app.set('port', (process.env.PORT || 3001));
+app.set('port', (process.env.PORT || 8081));
 
 app.get('/api/greeting', (req, res) => {
   try {
