@@ -23,7 +23,7 @@ class App extends Component {
       .then(async (response) => {
         const data = await response.json();
         console.log("app.js: data", data);
-        return response.json();
+        return data;
       })
       .then(state => this.setState(state));
   }
