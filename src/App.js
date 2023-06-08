@@ -19,7 +19,7 @@ class App extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    fetch(`/server/greeting?name=${encodeURIComponent(this.state.name)}`)
+    fetch(`/api/greeting?name=${encodeURIComponent(this.state.name)}`)
       .then(async (response) => {
         const data = await response.json();
         console.log("app.js: data", data);
