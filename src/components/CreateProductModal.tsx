@@ -1,8 +1,7 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useState } from "react";
 import {
   Box,
   Button,
-  Checkbox,
   InputLabel,
   Modal,
   Select,
@@ -10,9 +9,9 @@ import {
 } from "@mui/material";
 import moment from "moment";
 import { useForm } from "react-hook-form";
-import { IProductBody, IProductForm, Priority } from "../models/Product";
-import { useAppActions } from "../providers/actionsProvider";
+import { IProductBody, IProductForm } from "../models/Product";
 import Grid from "@mui/material/Grid";
+import { useProductActions, useProductState } from "../context/productsContext";
 
 const style = {
   // eslint-disable-next-line @typescript-eslint/prefer-as-const
@@ -30,14 +29,14 @@ const style = {
 interface Props {
   open: boolean;
   onClose: () => void;
-  getProducts: () => Promise<void>;
 }
 
 // eslint-disable-next-line react/display-name
-const CreateProductModal = memo(({ open, onClose, getProducts }: Props) => {
-  const appActions = useAppActions();
+const CreateProductModal = memo(({ open, onClose }: Props) => {
+  const productActions = useProductActions();
+  const { isCreating } = useProductState();
 
-  const [isLoading, setIsLoading] = useState(false);
+
   const {
     setValue,
     getValues,
@@ -56,33 +55,22 @@ const CreateProductModal = memo(({ open, onClose, getProducts }: Props) => {
 
   async function onSubmit(data: IProductForm) {
     console.log("CreateProductModal: data", data);
-    const { id, title, description, date, priority, completed } = getValues();
+    const { id, title, description } = getValues();
     const payload: IProductBody = {
       id,
       title,
       description,
-      priority,
-      completed: false,
-      date: moment(date).local().toDate(),
     };
     console.log("CreateProductModal: payload", payload);
-    if (appActions) {
-      setIsLoading(true);
-      const { status } = await appActions.createProduct(payload);
-      if (status === 201) {
-        alert("Product successfully updated");
-        await getProducts();
-      } else {
-        alert("Failed to update Product");
+    if (productActions) {
+      try {
+        await productActions.createNewProduct(payload);
+        handleClose(); 
+      } catch (err) {
+        console.error(err);     
       }
-      setIsLoading(false);
     }
   }
-
-  const greaterThanToday = (value: string) => {
-    const date = new Date(value);
-    return date.getTime() >= Date.now() || "Date/time must be after today";
-  };
 
   return (
     <div>
@@ -143,40 +131,14 @@ const CreateProductModal = memo(({ open, onClose, getProducts }: Props) => {
                 }
               />
             </Grid>
-            <Grid xs={12}>
-              <TextField
-                id="date"
-                required
-                label="date"
-                type="datetime-local"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                {...register("date", {
-                  required: "Start Date is required",
-                  validate: { greaterThanToday },
-                })}
-                error={!!errors.date}
-                helperText={errors.date ? errors.date.message : null}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <InputLabel id="label">Priority</InputLabel>
-              <Select required native id="priority" {...register("priority")}>
-                {Object.entries(Priority).map(([key, value]) => (
-                  <option key={key} value={value}>
-                    {value}
-                  </option>
-                ))}
-              </Select>
-            </Grid>
           </Grid>
           <Button
+            disabled={isCreating}
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}>
-            {isLoading ? <>Please wait..</> : <>Create</>}
+            {isCreating ? <>Please wait..</> : <>Create</>}
           </Button>
         </Box>
       </Modal>

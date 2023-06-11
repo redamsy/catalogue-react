@@ -1,10 +1,11 @@
 import React,{ lazy, Suspense, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import ProtectedRoutes from "./routes/ProtectedRoutes"; //Authenticated routes
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import CircularProgressPage from "./components/CircularProgressPage";
 import { useAuthState } from "./context/authContext";
-import { AppActionsProvider } from "./providers/actionsProvider";
-
+import { ProductProvider } from "./providers/productProvider";
+import Home from "./pages/Home";
+import ProductPage from "./pages/ProductPage";
+import routes from "./routes/authenticatedRoutes";
 const SignInPage = lazy(() => import("./pages/SignIn"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const NotFoundComponent = lazy(() => import("./components/NotFoundComponent"));
@@ -39,20 +40,25 @@ const App = (): JSX.Element => {
               )
             }
           />
-          {/* You'll only need the trailing * when there is another <Routes> */}
+          {/* You'll only need the trailing * (path='/*) when there is another <Routes> */}
+          {/* if we don't want to include path : "/" then use <Outlet/>
+            https://reactrouter.com/en/main/components/outlet */}
           <Route
-            path="/*"
-            element={
-              isAuthenticated ? (
-                <AppActionsProvider>
-                  <ProtectedRoutes />
-                </AppActionsProvider>
-              ) : (
-                <Navigate to="/signin" />
-              )
-            }
-          />
-          <Route path="*" element={<NotFoundComponent />}/>
+            element={<ProductProvider><Outlet /></ProductProvider>}
+          >
+            {isAuthenticated ? (
+              <>
+                  {/* we can't make this as a component since any direct child of <Route> should be exactly <Route> or <Routes>   */}
+                  {routes.map(({ component: Component, path }) => (
+                    <Route path={`/${path}`} key={path} element={<Component />} />
+                  ))}
+                  {/* <Outlet/> */}
+              </>
+            ) : (
+              <Navigate to="/signin" />
+            )}
+          </Route>
+          <Route path="/*" element={<NotFoundComponent />}/>
         </Routes>
       </Suspense>
     </Router>

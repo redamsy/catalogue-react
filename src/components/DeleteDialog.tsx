@@ -9,11 +9,12 @@ import {
 import React, { memo } from "react";
 interface IProps {
   open: boolean;
+  isDeleting: boolean;
   onCancel: () => void;
   onDelete: () => void;
 }
 // eslint-disable-next-line react/display-name
-const DeleteAlertDialog = memo(({ open, onCancel, onDelete }: IProps) => {
+const DeleteAlertDialog = memo(({ open, isDeleting, onCancel, onDelete }: IProps) => {
   return (
     <Dialog
       open={open}
@@ -31,8 +32,8 @@ const DeleteAlertDialog = memo(({ open, onCancel, onDelete }: IProps) => {
         <Button onClick={onCancel} color="primary">
           Cancel
         </Button>
-        <Button onClick={onDelete} color="primary" autoFocus>
-          Delete
+        <Button onClick={onDelete} color="primary" autoFocus disabled={isDeleting}>
+            {isDeleting ? <>Please wait..</> : <>Delete</>}
         </Button>
       </DialogActions>
     </Dialog>

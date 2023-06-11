@@ -7,7 +7,7 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AppBarWrapper from "../../components/AppBarWrapper";
-import ProductListWrapper from "../../components/ProductListWrapper";
+import ProductList from "../../components/ProductList";
 
 export default function ProductPage(): JSX.Element {
   const theme = createTheme();
@@ -29,7 +29,7 @@ export default function ProductPage(): JSX.Element {
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <ListAltIcon />
             </Avatar>
-            <ProductListWrapper />
+            <ProductList />
           </Box>
         </Container>
       </AppBarWrapper>

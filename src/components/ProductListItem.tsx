@@ -1,5 +1,4 @@
-import React, { memo, useState } from "react";
-import FlagIcon from "@mui/icons-material/Flag";
+import React, { memo } from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -12,7 +11,6 @@ interface IProps {
   product: Product;
   handleUpdateOpen: (product: Product) => Promise<void>;
   handleDeleteOpen: (id: string) => void;
-  handleMarkAsCompleted: (data: Product) => Promise<void>;
 }
 // eslint-disable-next-line react/display-name
 const ProductListItem = memo(
@@ -20,9 +18,13 @@ const ProductListItem = memo(
     product,
     handleUpdateOpen,
     handleDeleteOpen,
-    handleMarkAsCompleted,
   }: IProps) => {
-    const [isLoading, setIsLoading] = useState(false);
+    const newDate = new Date(product.createdAt);
+    const date = new Date(
+      newDate.getFullYear(),
+      newDate.getMonth(),
+      newDate.getDate()
+    );
 
     return (
       <ListItem key={product.id} disableGutters>
@@ -45,20 +47,6 @@ const ProductListItem = memo(
             }}>
             <DeleteIcon />
           </IconButton>
-          {!isLoading && (
-            <IconButton
-              edge="end"
-              aria-label="delete"
-              data-user={product.id}
-              onClick={async () => {
-                setIsLoading(true);
-                await handleMarkAsCompleted(product);
-                setIsLoading(false);
-                return;
-              }}>
-              <FlagIcon />
-            </IconButton>
-          )}
         </ListItemSecondaryAction>
       </ListItem>
     );

@@ -139,6 +139,7 @@ export default function SignIn(): JSX.Element {
               helperText={errors.password ? errors.password.message : null}
             />
             <Button
+              disabled={isSigningIn}
               type="submit"
               fullWidth
               variant="contained"

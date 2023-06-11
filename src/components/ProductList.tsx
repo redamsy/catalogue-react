@@ -3,12 +3,10 @@ import CircularProgressPage from "./CircularProgressPage";
 import List from "@mui/material/List";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
-import { IProductBody, Product } from "../models/Product";
-import { useAppActions } from "../providers/actionsProvider";
+import { Product } from "../models/Product";
 import DeleteDialog from "./DeleteDialog";
 import UpdateProductModal from "./UpdateProductModal";
 import CreateProductModal from "./CreateProductModal";
-import { ProductsGroupedByDay } from "./ProductListWrapper";
 import {
   AppBar,
   createTheme,
@@ -17,19 +15,14 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import SwitchRemainingFinished from "./SwitchRemainingFinished";
 import ProductListItem from "./ProductListItem";
 import moment from "moment";
-
-function appBarLabel(label: string) {
-  return (
-    <Toolbar>
-      <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-        {label}
-      </Typography>
-    </Toolbar>
-  );
-}
+import { useProductActions, useProductState } from "../context/productsContext";import {
+  Alert,
+  InputAdornment,
+  Snackbar,
+  SnackbarCloseReason,
+} from "@mui/material";
 
 const darkTheme = createTheme({
   palette: {
@@ -40,43 +33,33 @@ const darkTheme = createTheme({
   },
 });
 
-interface Props {
-  products: Product[];
-  remainingProductsGroupedByDay: ProductsGroupedByDay[];
-  finishedProductsGroupedByDay: ProductsGroupedByDay[];
-  loading: boolean;
-  getProducts: () => Promise<void>;
-}
-
 // eslint-disable-next-line react/display-name
 const AbstractCarousel = memo(
-  ({
-    products,
-    remainingProductsGroupedByDay,
-    finishedProductsGroupedByDay,
-    loading,
-    getProducts,
-  }: Props) => {
-    const appActions = useAppActions();
+  () => {
+    const productActions = useProductActions();
+    const { products, loadingData, isDeleting, createError, updateError, deleteError, openSnack } = useProductState();
 
     const [createOpen, setCreateOpen] = useState(false);
     const [productToUpdate, setProductToUpdate] = useState<Product | null>(null);
     const [updateOpen, setUpdateOpen] = useState(false);
     const [idToDelete, setIdToDelete] = React.useState<string>("");
-    const [openAlert, setOpenAlert] = React.useState(false);
+    const [deleteOpen, setDeleteOpen] = React.useState(false);
 
+    const handleClose = () => {
+      productActions.clearErrorsAndCloseSnack();
+    };
+  
     const handleDeleteOpen = (id: string) => {
       setIdToDelete(id);
-      setOpenAlert(true);
+      setDeleteOpen(true);
     };
     const handleDeleteClose = () => {
-      setOpenAlert(false);
+      setDeleteOpen(false);
     };
 
     const handleRemoveProduct = async (id: string) => {
-      if (appActions) {
-        await appActions.deleteCurrentUserProduct(id);
-        await getProducts();
+      if (productActions) {
+        await productActions.deleteCurrentProduct(id);
         handleDeleteClose();
       }
     };
@@ -99,77 +82,36 @@ const AbstractCarousel = memo(
       setUpdateOpen(true);
     };
 
-    const [checked, setChecked] = React.useState(true);
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setChecked(event.target.checked);
-    };
-
-    async function handleMarkAsCompleted(data: Product) {
-      const { completed, ...rest } = data;
-      const payload: IProductBody = {
-        completed: true,
-        ...rest,
-      };
-      if (appActions) {
-        const { status } = await appActions.updateCurrentUserProduct(payload);
-        if (status === 200) {
-          alert("marked to-do as completed successfully ");
-          await getProducts();
-        } else {
-          alert("Failed to marked to-do as completed");
-        }
-      }
-    }
-
-    const ProductsComp = (productsGroupedByDay: ProductsGroupedByDay[]) => (
+    const ProductsComp = () => (
       <>
-        {productsGroupedByDay.map((group) => {
-          const { day, products } = group;
-          return (
-            <>
-              <ThemeProvider theme={darkTheme}>
-                <AppBar
-                  position="static"
-                  color="primary"
-                  key={day.toLocaleDateString()}>
-                  {appBarLabel(day.toLocaleDateString())}
-                </AppBar>
-              </ThemeProvider>
-              <List
-                sx={{
-                  width: "100%",
-                  maxWidth: 360,
-                  bgcolor: "background.paper",
-                }}>
-                {products
-                  .sort((a, b) => {
-                    if (a.priority < b.priority) {
-                      return -1;
-                    }
-                    if (a.priority > b.priority) {
-                      return 1;
-                    }
-                    return 0;
-                  })
-                  .map((product) => (
-                    <ProductListItem
-                      key={product.id}
-                      product={product}
-                      handleUpdateOpen={handleUpdateOpen}
-                      handleDeleteOpen={handleDeleteOpen}
-                      handleMarkAsCompleted={handleMarkAsCompleted}
-                    />
-                  ))}
-              </List>
-            </>
-          );
-        })}
+        <ThemeProvider theme={darkTheme}>
+          <AppBar
+            position="static"
+            color="primary"
+          >
+            Products
+          </AppBar>
+        </ThemeProvider>
+        <List
+          sx={{
+            width: "100%",
+            maxWidth: 360,
+            bgcolor: "background.paper",
+          }}>
+          {products.map((product) => (
+              <ProductListItem
+                key={product.id}
+                product={product}
+                handleUpdateOpen={handleUpdateOpen}
+                handleDeleteOpen={handleDeleteOpen}
+              />
+            ))}
+        </List>
       </>
     );
-    return (
+  return (
       <>
-        {loading ? (
+        {loadingData ? (
           <CircularProgressPage />
         ) : (
           <>
@@ -188,22 +130,15 @@ const AbstractCarousel = memo(
                 }}>
                 <AddIcon />
               </IconButton>
-              <SwitchRemainingFinished
-                checked={checked}
-                handleChange={handleChange}
-              />
             </List>
             <Divider />
-            {checked
-              ? ProductsComp(remainingProductsGroupedByDay)
-              : ProductsComp(finishedProductsGroupedByDay)}
+            {ProductsComp()}
           </>
         )}
         {createOpen && (
           <CreateProductModal
             open={createOpen}
             onClose={handleCreateClose}
-            getProducts={getProducts}
           />
         )}
         {productToUpdate && (
@@ -211,14 +146,35 @@ const AbstractCarousel = memo(
             open={updateOpen}
             onClose={handleUpdateClose}
             product={productToUpdate}
-            getProducts={getProducts}
           />
         )}
         <DeleteDialog
-          open={openAlert}
+          open={deleteOpen}
+          isDeleting={isDeleting}
           onCancel={() => handleDeleteClose()}
           onDelete={() => handleRemoveProduct(idToDelete)}
         />
+        {openSnack ? (
+        <Snackbar
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          open={openSnack}
+          autoHideDuration={7000}
+          onClose={handleClose}
+        >
+          {(!updateError && !updateError && !deleteError) ? (
+            <Alert onClose={handleClose} severity="success">
+              Succesful
+            </Alert>
+          ) : (
+            <Alert onClose={handleClose} severity="error">
+              {createError || updateError || deleteError}
+            </Alert>
+          )}
+        </Snackbar>
+        ) : (<></>)}
       </>
     );
   }

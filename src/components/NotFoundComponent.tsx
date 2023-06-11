@@ -1,8 +1,14 @@
 import React from "react";
 import { Box, Button, Container, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import { useNavigate } from "react-router-dom";
 
-export default function Error(): JSX.Element {
+export default function NotFoundComponent(): JSX.Element {
+  const navigate = useNavigate();
+  function handleClick() {
+    navigate(`/`);
+    // navigate(-1);// got to previous page(maybe another site, we don't want this)
+  }
   return (
     <Box
       sx={{
@@ -13,14 +19,14 @@ export default function Error(): JSX.Element {
       }}>
       <Container maxWidth="md">
         <Grid container spacing={2}>
-          <Grid xs={6}>
+          <Grid item xs={6}>
             <Typography variant="h1">404</Typography>
             <Typography variant="h6">
               The page you’re looking for doesn’t exist.
             </Typography>
-            <Button variant="contained">Back Home</Button>
+            <Button variant="contained" onClick={handleClick}>Back Home</Button>
           </Grid>
-          <Grid xs={6}>
+          <Grid item xs={6}>
             <img
               src="https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569__340.jpg"
               alt=""

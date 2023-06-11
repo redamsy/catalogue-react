@@ -19,11 +19,11 @@ export default function AppBarWrapper({
   buttonPath: string;
   buttonIcon: React.ReactNode;
 }): JSX.Element {
-  const nseNavigate = useNavigate();
+  const navigate = useNavigate();
   const { signOut } = useAuthActions();
 
   function handleClick() {
-    nseNavigate(`/${buttonPath}`);
+    navigate(`/${buttonPath}`);
   }
 
   function handleSignOut() {

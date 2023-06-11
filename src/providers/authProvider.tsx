@@ -133,7 +133,6 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
       setUserProfile(null);
       setIsAuthenticated(false);
       setIsSigningIn(false);
-      setSignInError(error.message || "SignIn failed");
       if (error.response && error.response.data && error.response.data.message) {
         setSignInError(
           `SignIn failed. ${error.response.data.message}`

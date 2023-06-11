@@ -160,6 +160,7 @@ export default function SignUp(): JSX.Element {
               </Grid>
             </Grid>
             <Button
+              disabled={isSigningUp}
               type="submit"
               fullWidth
               variant="contained"

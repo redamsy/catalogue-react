@@ -41,7 +41,7 @@ const signin = async (req, res) => {
   try {
     const { userName, password } = req.body;
 
-    const user = await userModel.findOne({ userName }).select("Username password salt id name");
+    const user = await userModel.findOne({ userName }).select("username password salt id name");
 
     if (!user) return responseHandler.badrequest(res, "User not exist");
 
