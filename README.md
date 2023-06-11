@@ -25,3 +25,9 @@
 https://github.com/philnash/react-express-starter
 
 https://dev.to/knowankit/setup-eslint-and-prettier-in-react-app-357b
+
+# MERN stands for MongoDB, Express, React, Node, 
+
+TODO: implment reset password
+
+TODO: implement image upload
