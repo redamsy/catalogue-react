@@ -41,8 +41,7 @@ const App = (): JSX.Element => {
             }
           />
           {/* You'll only need the trailing * (path='/*) when there is another <Routes> */}
-          {/* if we don't want to include path : "/" then use <Outlet/>
-            https://reactrouter.com/en/main/components/outlet */}
+          {/* if we don't want to include path : "/" then use <Outlet/>, see : https://reactrouter.com/en/main/components/outlet */}
           <Route
             element={isAuthenticated ? (
                 <ProductProvider><Outlet /></ProductProvider>
