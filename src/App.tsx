@@ -44,9 +44,12 @@ const App = (): JSX.Element => {
           {/* if we don't want to include path : "/" then use <Outlet/>
             https://reactrouter.com/en/main/components/outlet */}
           <Route
-            element={<ProductProvider><Outlet /></ProductProvider>}
+            element={isAuthenticated ? (
+                <ProductProvider><Outlet /></ProductProvider>
+              ) : (
+                <Navigate to="/signin" />
+            )}
           >
-            {isAuthenticated ? (
               <>
                   {/* we can't make this as a component since any direct child of <Route> should be exactly <Route> or <Routes>   */}
                   {routes.map(({ component: Component, path }) => (
@@ -54,9 +57,6 @@ const App = (): JSX.Element => {
                   ))}
                   {/* <Outlet/> */}
               </>
-            ) : (
-              <Navigate to="/signin" />
-            )}
           </Route>
           <Route path="/*" element={<NotFoundComponent />}/>
         </Routes>
