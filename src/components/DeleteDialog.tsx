@@ -1,3 +1,4 @@
+import React, { memo } from "react";
 import {
   Button,
   Dialog,
@@ -6,21 +7,30 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import React, { memo } from "react";
+import { useProductActions } from "../context/productsContext";
 interface IProps {
+  id: string;
   open: boolean;
   isDeleting: boolean;
   onCancel: () => void;
-  onDelete: () => void;
 }
 // eslint-disable-next-line react/display-name
-const DeleteAlertDialog = memo(({ open, isDeleting, onCancel, onDelete }: IProps) => {
+const DeleteAlertDialog = memo(({ id, open, isDeleting, onCancel }: IProps) => {
+  const productActions = useProductActions();
+
+  const handleRemoveProduct = async () => {
+    if (productActions) {
+      await productActions.deleteCurrentProduct(id);
+      onCancel();
+    }
+  };
   return (
     <Dialog
       open={open}
       onClose={onCancel}
       aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description">
+      aria-describedby="alert-dialog-description"
+    >
       <DialogTitle id="alert-dialog-title">delete?</DialogTitle>
 
       <DialogContent>
@@ -32,7 +42,7 @@ const DeleteAlertDialog = memo(({ open, isDeleting, onCancel, onDelete }: IProps
         <Button onClick={onCancel} color="primary">
           Cancel
         </Button>
-        <Button onClick={onDelete} color="primary" autoFocus disabled={isDeleting}>
+        <Button onClick={handleRemoveProduct} color="primary" autoFocus disabled={isDeleting}>
             {isDeleting ? <>Please wait..</> : <>Delete</>}
         </Button>
       </DialogActions>

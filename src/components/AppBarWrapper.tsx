@@ -46,7 +46,7 @@ export default function AppBarWrapper({
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             {pageName}
           </Typography>
-          <Button color="inherit" onClick={handleSignOut}>
+          <Button color="secondary"  variant="contained" onClick={handleSignOut}>
             Sign Out
           </Button>
         </Toolbar>

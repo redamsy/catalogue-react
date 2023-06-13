@@ -22,14 +22,15 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   try {
     const { productId } = req.params;
-    const { title, description } = req.body;
+    const { title, description, imageUrl } = req.body;
 
-    const product = await productModel.findById(productId).select("description id title createdAt updatedAt");
+    const product = await productModel.findById(productId).select("description imageUrl id title createdAt updatedAt");
 
     if (!product) return responseHandler.unauthorize(res);
 
     product.title = title;
     product.description = description;
+    product.imageUrl = imageUrl;
 
     await product.save();
 

@@ -4,12 +4,26 @@ const defaultTheme = createTheme();
 
 export default createTheme({
   components: {
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          fontSize: '1.1rem', //override to make tooltip font size larger
+        },
+      },
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        thumb: {
+          color: 'pink', //change the color of the switch thumb in the columns show/hide menu to pink
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
           borderRadius: "4px",
           textTransform: "none",
-          color: "rgb(40, 42, 43)",
+          // color: "rgb(40, 42, 43)",
           fontSize: "0.9rem",
           transition: defaultTheme.transitions.create(
             ["background-color", "box-shadow", "border", "color"],
@@ -41,7 +55,7 @@ export default createTheme({
     MuiTypography: {
       styleOverrides: {
         body1: {
-          color: "rgb(40, 42, 43)",
+          // color: "rgb(40, 42, 43)",
           fontSize: "0.9rem",
         },
       },
@@ -67,23 +81,23 @@ export default createTheme({
         },
       },
     },
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          color: "rgb(40, 42, 43)",
-        },
-      },
-    },
-    MuiInputLabel: {
-      styleOverrides: {
-        root: {
-          color: "rgb(40, 42, 43)",
-          fontSize: "1.1rem",
-          marginBottom: "0.2em",
-          fontWeight: 500,
-        },
-      },
-    },
+    // MuiTextField: {
+    //   styleOverrides: {
+    //     root: {
+    //       color: "rgb(40, 42, 43)",
+    //     },
+    //   },
+    // },
+    // MuiInputLabel: {
+    //   styleOverrides: {
+    //     root: {
+    //       color: "rgb(40, 42, 43)",
+    //       fontSize: "1.1rem",
+    //       marginBottom: "0.2em",
+    //       fontWeight: 500,
+    //     },
+    //   },
+    // },
     MuiOutlinedInput: {
       styleOverrides: {
         notchedOutline: {
@@ -94,10 +108,18 @@ export default createTheme({
   },
   typography: {
     fontFamily: "Inter, sans-serif",
+    button: {
+      textTransform: 'none', //customize typography styles for all buttons in table by default
+      fontSize: '1.2rem',
+    },
   },
   palette: {
+    mode: 'dark',
     primary: {
-      main: "#027AC5",
+      main: "#14B8A6",
+    },
+    background: {
+      default:'#000', //pure black table in dark mode for fun
     },
   },
 });
