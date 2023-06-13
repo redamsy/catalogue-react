@@ -3,9 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-
 import CircularProgressPage from "./components/CircularProgressPage";
 import { useAuthState } from "./context/authContext";
 import { ProductProvider } from "./providers/productProvider";
-import Home from "./pages/Home";
-import ProductPage from "./pages/ProductPage";
 import routes from "./routes/authenticatedRoutes";
+
 const SignInPage = lazy(() => import("./pages/SignIn"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const NotFoundComponent = lazy(() => import("./components/NotFoundComponent"));

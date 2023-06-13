@@ -38,6 +38,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       try {
         setLoadingData(true);
         const res = await getProducts();
+        console.log("productProvider: res.data", res.data);
         setProducts(res.data);
         setLoadingData(false);
       } catch (error: Error | any) {
@@ -60,10 +61,10 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       clearErrorsAndCloseSnack();
       setIsCreating(true);
       const createResponse = await createProduct(productBody);
-      if (createResponse.data && createResponse.status === 201) {
-        console.log("productProvider: createNewProduct", createResponse);
+      console.log("productProvider: createNewProduct", createResponse);
+      const { status, data: product } = createResponse;
 
-        const { status, data: product } = createResponse;
+      if (product && status === 201) {
 
         setProducts([...products, product]);
 
@@ -81,17 +82,17 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       setCreateError(`Create product faild: ${error.message}`);
       setOpenSnack(true);
     }
-  }, [products]);
+  }, [products, clearErrorsAndCloseSnack]);
 
   const updateCurrentProduct = useCallback(async (productBody: IProductBody) => {
     try {
       clearErrorsAndCloseSnack();
       setIsUpdating(true);
       const updateResponse = await updateProduct(productBody);
-      if (updateResponse.data && updateResponse.status === 200) {
-        console.log("productProvider: updateCurrentProduct", updateResponse);
+      console.log("productProvider: updateCurrentProduct", updateResponse);
+      const { status, data: product } = updateResponse;
+      if (product && status === 200) {
 
-        const { status, data: product } = updateResponse;
 
         setProducts((prevProducts) =>{
           return prevProducts.map((p) => (p.id === product.id ? product : p));
@@ -111,15 +112,15 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       setUpdateError(`Update product faild: ${error.message}`);
       setOpenSnack(true);
     }
-  }, []);
+  }, [clearErrorsAndCloseSnack]);
 
   const deleteCurrentProduct = useCallback(async (productId: string) => {
     try {
       clearErrorsAndCloseSnack();
       setIsDeleting(true);
       const deleteResponse = await deleteProduct(productId);
+      console.log("productProvider: deleteResponse", deleteResponse);
       if (deleteResponse.status === 200) {
-        console.log("productProvider: deleteResponse", deleteResponse);
 
         setProducts(products.filter((product) => product.id !== productId));
 
@@ -137,7 +138,7 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       setDeleteError(`Delete product faild: ${error.message}`);
       setOpenSnack(true);
     }
-  }, [products]);
+  }, [products, clearErrorsAndCloseSnack]);
 
   const productContext = useMemo(
     () => ({

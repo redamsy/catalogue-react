@@ -17,10 +17,13 @@ router.post(
   tokenMiddleware.auth,
   body("title")
     .exists().withMessage("Product title is required")
-    .isLength({ min: 1 }).withMessage("Product title can not be empty"),
+    .isLength({ min: 1, max: 50 }).withMessage("Product title can not be empty (min: 1, max: 50)"),
   body("description")
     .exists().withMessage("Product description is required")
-    .isLength({ min: 1 }).withMessage("Product description can not be empty"),
+    .isLength({ min: 1, max: 255 }).withMessage("Product description can not be empty (min: 1, max: 255)"),
+    body("imageUrl")
+      .exists().withMessage("Product image url is required")
+      .isLength({ min: 1, max: 150 }).withMessage("Product image url can not be empty (min: 1, max: 255)"),
   requestHandler.validate,
   productController.create
 );
@@ -30,10 +33,13 @@ router.put(
   tokenMiddleware.auth,
   body("title")
     .exists().withMessage("Product title is required")
-    .isLength({ min: 1 }).withMessage("Product title can not be empty"),
+    .isLength({ min: 1, max: 50 }).withMessage("Product title can not be empty (min: 1, max: 50)"),
   body("description")
     .exists().withMessage("Product description is required")
-    .isLength({ min: 1 }).withMessage("Product description can not be empty"),
+    .isLength({ min: 1, max: 255 }).withMessage("Product description can not be empty (min: 1, max: 255)"),
+  body("imageUrl")
+    .exists().withMessage("Product image url is required")
+    .isLength({ min: 1, max: 150 }).withMessage("Product image url can not be empty (min: 1, max: 255)"),
   requestHandler.validate,
   productController.update
 );
