@@ -1,7 +1,6 @@
 import * as React from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import CssBaseline from "@mui/material/CssBaseline";
-import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import AppBarWrapper from "../../components/AppBarWrapper";
 import Tabs from "../../components/Tabs";
