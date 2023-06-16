@@ -19,5 +19,16 @@ export default mongoose.model(
       required: true,
       maxlength: 150,
     },
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    remaining: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 9999,
+    },
   }, modelOptions)
 );

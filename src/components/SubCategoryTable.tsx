@@ -9,26 +9,23 @@ import {
   Button,
   IconButton,
   Tooltip,
-  Typography,
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
-import { useProductActions, useProductState } from '../context/productsContext';
-import { DetailedProduct } from '../models/Product';
+import { useSubCategoryActions, useSubCategoryState } from '../context/subCategoriesContext';
+import { SubCategory } from '../models/SubCategory';
 import DeleteDialog from './DeleteDialog';
-import CreateProductModal from './CreateProductModal';
-import UpdateProductModal from './UpdateProductModal';
+import CreateSubCategoryModal from './CreateSubCategoryModal';
+import UpdateSubCategoryModal from './UpdateSubCategoryModal';
 import CircularProgressPage from './CircularProgressPage';
 import {
   Alert,
   Snackbar,
 } from "@mui/material";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { extractImageSrcFromUrl } from '../utils';
 import { ExportToCsv, Options } from 'export-to-csv-fix-source-map';
-var NotFoundImage = require('../assets/images/not-found.png');
 
 
-const columns: MRT_ColumnDef<DetailedProduct>[] = [
+const columns: MRT_ColumnDef<SubCategory>[] = [
     {
       accessorKey: 'id',
       header: 'ID',
@@ -37,101 +34,8 @@ const columns: MRT_ColumnDef<DetailedProduct>[] = [
       enableSorting: false,
     },
     {
-      accessorFn: (row) => `${row.title}`, //accessorFn used to join multiple data into a single cell
-      accessorKey: 'title',
-      header: 'Title',
-      Cell: ({ renderedCellValue, row }) => (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem',
-          }}
-        >
-          <img
-            alt="avatar"
-            height={30}
-            src={extractImageSrcFromUrl(row.original.imageUrl) || NotFoundImage}
-            loading="lazy"
-            style={{ borderRadius: '50%' }}
-          />
-          {/* using renderedCellValue instead of cell.getValue() preserves filter match highlighting */}
-          <span>{renderedCellValue}</span>
-        </Box>
-      ),
-    },
-    {
-      accessorKey: 'description',
-      header: 'Description',
-      Cell: ({ row }) => (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem',
-          }}
-        >
-          <span
-            style={{wordBreak: 'break-word', wordWrap: 'break-word', overflowWrap: 'break-word'}}
-          >{row.original.description}
-          </span>
-        </Box>
-      ),
-    },
-    {
-      accessorKey: 'imageUrl',
-      header: 'Google Drive Public Image Url',
-      enableColumnOrdering: false,
-      enableEditing: false, //disable editing on this column
-      enableSorting: false,
-    },
-    {
-      accessorKey: 'price',
-      header: 'Price $',
-    },
-    {
-      accessorKey: 'remaining',
-      header: 'Remaining $',
-    },
-    {
-      accessorKey: 'pSCCs',
-      header: 'Category and SubCategories',
-      enableColumnFilter: false,
-      Cell: ({ row }) => (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem',
-          }}
-        >
-          <ul>
-          {row.original.pSCCs.map((el) => (//isObjectEmpty(el.subCategory)
-            <li key={el.id} >{el.category.name} {el.subCategory.name}</li>
-          ))}
-          </ul>
-        </Box>
-      ),
-    },
-    {
-      accessorFn: (row) => new Date(row.createdAt), //convert to Date for sorting and filtering
-      id: 'createdAt',
-      header: 'Created At',
-      // filterFn: 'lessThanOrEqualTo',
-      enableColumnFilter: false,
-      sortingFn: 'datetime',
-      Cell: ({ cell }) => cell.getValue<Date>()?.toLocaleDateString(), //render Date as a string
-      Header: ({ column }) => <em>{column.columnDef.header}</em>, //custom header markup
-    },
-    {
-      accessorFn: (row) => new Date(row.updatedAt), //convert to Date for sorting and filtering
-      id: 'updatedAt',
-      header: 'Updated At',
-      // filterFn: 'lessThanOrEqualTo',
-      enableColumnFilter: false,
-      sortingFn: 'datetime',
-      Cell: ({ cell }) => cell.getValue<Date>()?.toLocaleDateString(), //render Date as a string
-      Header: ({ column }) => <em>{column.columnDef.header}</em>, //custom header markup
+      accessorKey: 'name',
+      header: 'Name',
     },
   ];
 
@@ -141,8 +45,8 @@ const csvOptions: Options = {
   decimalSeparator: '.',
   showLabels: true,
   showTitle: true,
-  filename: 'Product Table',
-  title: 'Products Table',
+  filename: 'SubCategory Table',
+  title: 'SubCategories Table',
   useTextFile: false,
   useBom: true,
   useKeysAsHeaders: false,
@@ -150,19 +54,19 @@ const csvOptions: Options = {
 };
 const csvExporter = new ExportToCsv(csvOptions);
 
-const ProductTable = memo(() => {
-  const productActions = useProductActions();
-  const { detailedProducts, loadingData, isDeleting, createError, updateError, deleteError, openSnack } = useProductState();
+const SubCategoryTable = memo(() => {
+  const subCategoryActions = useSubCategoryActions();
+  const { subCategories, loadingData, isDeleting, createError, updateError, deleteError, openSnack } = useSubCategoryState();
 
   const [createOpen, setCreateOpen] = useState(false);
-  const [productToUpdate, setProductToUpdate] = useState<DetailedProduct | null>(null);
+  const [subCategoryToUpdate, setSubCategoryToUpdate] = useState<SubCategory | null>(null);
   const [updateOpen, setUpdateOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [idToDelete, setIdToDelete] = React.useState<string>("");
 
   const handleClose = useCallback(() => {
-    productActions.clearErrorsAndCloseSnack();
-  }, [productActions]);
+    subCategoryActions.clearErrorsAndCloseSnack();
+  }, [subCategoryActions]);
 
   const handleCreateOpen = () => {
     setCreateOpen(true);
@@ -173,37 +77,23 @@ const ProductTable = memo(() => {
 
   const handleUpdateClose = () => {
     setUpdateOpen(false);
-    setProductToUpdate(null);
+    setSubCategoryToUpdate(null);
   };
   const handleUpdateOpen = useCallback(
-    (row: MRT_Row<DetailedProduct>) => {
+    (row: MRT_Row<SubCategory>) => {
       // const id = row.getValue('id');
-      // const product = products.find((el) => el.id === id);
-      const product = row.original;
-      if(product ) {
-        setProductToUpdate(product);
+      // const subCategory = subCategories.find((el) => el.id === id);
+      const subCategory = row.original;
+      if(subCategory ) {
+        setSubCategoryToUpdate(subCategory);
         setUpdateOpen(true);
       } else alert("something went wrong")
     },
     [],
   );
 
-  // const handleSaveRowEdits: MaterialReactTableProps<DetailedProduct>['onEditingRowSave'] =
-  //   async ({ exitEditingMode, row, values }) => {
-  //     if (!Object.keys(validationErrors).length) {
-  //       tableData[row.index] = values;
-  //       //send/receive api updates here, then refetch or update local table data for re-render
-  //       setTableData([...tableData]);
-  //       exitEditingMode(); //required to exit editing mode and close modal
-  //     }
-  //   };
-
-  // const handleCancelRowEdits = () => {
-  //   setValidationErrors({});
-  // };
-
   const handleDeleteOpen = useCallback(
-    (row: MRT_Row<DetailedProduct>) => {
+    (row: MRT_Row<SubCategory>) => {
       setIdToDelete(row.getValue('id'));
       setDeleteOpen(true);
     },
@@ -213,20 +103,20 @@ const ProductTable = memo(() => {
     setDeleteOpen(false);
   };
 
-  const handleExportRows = (rows: MRT_Row<DetailedProduct>[]) => {
+  const handleExportRows = (rows: MRT_Row<SubCategory>[]) => {
     // the order of the columns are based on the order of objects entries in the array
     csvExporter.generateCsv(rows.map((row) => {
-      const { id, title, description, imageUrl, price, remaining, createdAt, updatedAt } = row.original;
-      return { id, title, description, imageUrl, price, remaining, createdAt, updatedAt };
+      const { id, name } = row.original;
+      return { id, name };
     }));
   };
   const handleExportData = useCallback(() => {
     // the order of the columns are based on the order of objects entries in the array
-    csvExporter.generateCsv(detailedProducts.map((detailedProduct) => {
-      const { id, title, description, imageUrl, price, remaining, createdAt, updatedAt } = detailedProduct;
-      return { id, title, description, imageUrl, price, remaining, createdAt, updatedAt };
+    csvExporter.generateCsv(subCategories.map((subCategory) => {
+      const { id, name } = subCategory;
+      return { id, name };
     }));
-  }, [detailedProducts]);
+  }, [subCategories]);
 
   return (
     <>
@@ -248,36 +138,13 @@ const ProductTable = memo(() => {
             },
           }}
           columns={columns}
-          data={detailedProducts}
+          data={subCategories}
           editingMode="modal" //default
           enableColumnOrdering
           enableEditing
           // onEditingRowSave={handleSaveRowEdits}
           // onEditingRowCancel={handleCancelRowEdits}
           // initialState={{ columnVisibility: { imageUrl: false } }} 
-          renderDetailPanel={({ row }) => (
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-around',
-                alignItems: 'center',
-              }}
-            >
-              <img
-                alt="avatar"
-                height={200}
-                src={extractImageSrcFromUrl(row.original.imageUrl) || NotFoundImage}
-                loading="lazy"
-                style={{ borderRadius: '50%' }}
-              />
-              <Box sx={{ width: '70%',textAlign: 'center', wordBreak: 'break-word', wordWrap: 'break-word', overflowWrap: 'break-word' }}>
-                <Typography variant="h6">&quot;Details&quot;</Typography>
-                <Typography variant='body1'>
-                  {row.original.description}
-                </Typography>
-              </Box>
-            </Box>
-          )}
           renderRowActions={({ row, table }) => (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
               <Tooltip arrow placement="left" title="Edit">
@@ -302,7 +169,7 @@ const ProductTable = memo(() => {
                 }}
                 variant="contained"
               >
-                Create New Product
+                Create New Sub Category
               </Button>
               <Button
                 color="primary"
@@ -349,16 +216,16 @@ const ProductTable = memo(() => {
         />
       )}
       {createOpen && (
-        <CreateProductModal
+        <CreateSubCategoryModal
           open={createOpen}
           onClose={handleCreateClose}
         />
       )}
-      {productToUpdate && (
-        <UpdateProductModal
+      {subCategoryToUpdate && (
+        <UpdateSubCategoryModal
           open={updateOpen}
           onClose={handleUpdateClose}
-          product={productToUpdate}
+          subCategory={subCategoryToUpdate}
         />
       )}
       {deleteOpen && (
@@ -379,7 +246,7 @@ const ProductTable = memo(() => {
           autoHideDuration={7000}
           onClose={handleClose}
         >
-          {(!createError && !updateError && !deleteError) ? (
+          {(!updateError && !updateError && !deleteError) ? (
             <Alert onClose={handleClose} severity="success">
               Succesful
             </Alert>
@@ -394,4 +261,4 @@ const ProductTable = memo(() => {
   );
 });
 
-export default ProductTable;
+export default SubCategoryTable;

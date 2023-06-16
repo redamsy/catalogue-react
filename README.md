@@ -31,9 +31,8 @@ https://www.material-react-table.com/docs/examples/advanced
 
 TODO: implment reset password
 
-TODO: user seeding (only one)
-
-TODO: remove signup 
+TODO: remove signup after regitering first user
 
 
+TODO: implment guest and other pages
 

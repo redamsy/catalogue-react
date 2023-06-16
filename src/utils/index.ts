@@ -21,3 +21,7 @@ export function extractImageSrcFromUrl(GoogleDrivePublicImageUrl: string | undef
   }
   return undefined; // Return undefined if the image source couldn't be extracted
 }
+
+export function isObjectEmpty(obj: Record<string, string>): boolean {
+  return Object.keys(obj).length === 0;
+}

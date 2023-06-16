@@ -6,8 +6,8 @@ const routes = [
     component: lazy(() => import("../pages/Home")),
   },
   {
-    path: "products",
-    component: lazy(() => import("../pages/ProductPage")),
+    path: "dashboard",
+    component: lazy(() => import("../pages/Dashboard")),
   },
 ];
 
