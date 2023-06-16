@@ -7,8 +7,8 @@ import subCategoryRoute from "./subCategory.route.js";
 const router = express.Router();
 
 router.use("/user", userRoute);
-// router.use("/products", productRoute);
-//router.use("/categories", categoryRoute);
-// router.use("/subcategories", subCategoryRoute);
+router.use("/products", productRoute);
+router.use("/categories", categoryRoute);
+router.use("/subcategories", subCategoryRoute);
 
 export default router;
