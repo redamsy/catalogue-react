@@ -177,6 +177,12 @@ const CreateProductModal = memo(({ open, onClose }: Props) => {
               )}
             />
           </FormControl>
+          <Button
+            variant="outlined"
+            onClick={() => remove(index)}
+          >
+            Remove
+          </Button>
         </div>
       ))}
     </>
