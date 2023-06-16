@@ -36,3 +36,10 @@ TODO: remove signup after regitering first user
 
 TODO: implment guest and other pages
 
+
+# Note
+before deploying to vercel number of files in api folder must not exceed 12 files, otherwise we'll get the below error:
+.........
+Error: No more than 12 Serverless Functions can be added to a Deployment on the Hobby plan. Create a team (Pro plan) to deploy more. Learn More: https://vercel.link/function-count-limit
+exceeded_serverless_functions_per_deployment: No more than 12 Serverless Functions can be added to a Deployment on the Hobby plan. Create a team (Pro plan) to deploy more.
+.......
