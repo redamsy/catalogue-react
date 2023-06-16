@@ -1,7 +1,6 @@
 import express from "express";
 import { body } from "express-validator";
 import categoryController from "../controllers/category.controller.js";
-import subCategoryController from "../controllers/subCategory.controller.js";
 import tokenMiddleware from "../middlewares/token.middleware.js";
 import requestHandler from "../handlers/request.handler.js";
 
@@ -20,7 +19,7 @@ router.post(
     .exists().withMessage("Category name is required")
     .isLength({ min: 1, max: 50 }).withMessage("Category name can not be empty (min: 1, max: 50)"),
   requestHandler.validate,
-  categoryController.create
+  categoryController.createCategory
 );
 
 router.put(
@@ -30,19 +29,19 @@ router.put(
     .exists().withMessage("Category name is required")
     .isLength({ min: 1, max: 50 }).withMessage("Category name can not be empty (min: 1, max: 50)"),
   requestHandler.validate,
-  categoryController.update
+  categoryController.updateCategory
 );
 
 router.delete(
   "/categories/:categoryId",
   tokenMiddleware.auth,
-  categoryController.remove
+  categoryController.removeCategory
 );
 
 router.get(
   "/subCategories/",
   tokenMiddleware.auth,
-  subCategoryController.getSubCategories
+  categoryController.getSubCategories
 );
 
 router.post(
@@ -52,7 +51,7 @@ router.post(
     .exists().withMessage("SubCategory name is required")
     .isLength({ min: 1, max: 50 }).withMessage("SubCategory name can not be empty (min: 1, max: 50)"),
   requestHandler.validate,
-  subCategoryController.create
+  categoryController.createSubCategory
 );
 
 router.put(
@@ -62,13 +61,13 @@ router.put(
     .exists().withMessage("SubCategory name is required")
     .isLength({ min: 1, max: 50 }).withMessage("SubCategory name can not be empty (min: 1, max: 50)"),
   requestHandler.validate,
-  subCategoryController.update
+  categoryController.updateSubCategory
 );
 
 router.delete(
   "/subCategories/:subCategoryId",
   tokenMiddleware.auth,
-  subCategoryController.remove
+  categoryController.removeSubCategory
 );
 
 export default router;
