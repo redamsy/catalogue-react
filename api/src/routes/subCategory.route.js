@@ -7,13 +7,13 @@ import requestHandler from "../handlers/request.handler.js";
 const router = express.Router({ mergeParams: true });
 
 router.get(
-  "/",
+  "/subCategory/",
   tokenMiddleware.auth,
   subCategoryController.getSubCategories
 );
 
 router.post(
-  "/",
+  "/subCategory/",
   tokenMiddleware.auth,
   body("name")
     .exists().withMessage("SubCategory name is required")
@@ -23,7 +23,7 @@ router.post(
 );
 
 router.put(
-  "/:subCategoryId",
+  "/subCategory/:subCategoryId",
   tokenMiddleware.auth,
   body("name")
     .exists().withMessage("SubCategory name is required")
@@ -33,7 +33,7 @@ router.put(
 );
 
 router.delete(
-  "/:subCategoryId",
+  "/subCategory/:subCategoryId",
   tokenMiddleware.auth,
   subCategoryController.remove
 );
