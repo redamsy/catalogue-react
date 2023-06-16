@@ -4,6 +4,8 @@ import CircularProgressPage from "./components/CircularProgressPage";
 import { useAuthState } from "./context/authContext";
 import { ProductProvider } from "./providers/productProvider";
 import routes from "./routes/authenticatedRoutes";
+import { CategoryProvider } from "./providers/categoryProvider";
+import { SubCategoryProvider } from "./providers/subCategoryProvider";
 
 const SignInPage = lazy(() => import("./pages/SignIn"));
 const SignUp = lazy(() => import("./pages/SignUp"));
@@ -43,8 +45,17 @@ const App = (): JSX.Element => {
           {/* if we don't want to include path : "/" then use <Outlet/>, see : https://reactrouter.com/en/main/components/outlet */}
           <Route
             element={isAuthenticated ? (
-                <ProductProvider><Outlet /></ProductProvider>
+                <ProductProvider>
+                  <CategoryProvider>
+                    <SubCategoryProvider>
+                      <Outlet />
+                    </SubCategoryProvider>
+                  </CategoryProvider>
+                </ProductProvider>
               ) : (
+                // we can remove this and add a dialog inside ProdutProvider
+                //"Your session has expired"
+                //"Please log in again to continue using the app."
                 <Navigate to="/signin" />
             )}
           >

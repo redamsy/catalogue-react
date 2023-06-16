@@ -13,7 +13,7 @@ export default function Home(): JSX.Element {
     <AppBarWrapper
       pageName="Home"
       buttonIcon={<ListAltIcon />}
-      buttonPath="products">
+      buttonPath="dashboard">
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box

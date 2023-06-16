@@ -1,7 +1,7 @@
-import { IProductBody, Product } from "../../models/Product";
+import { IProductBody, DetailedProduct } from "../../models/Product";
 
 export interface IProductState {
-  products: Product[];
+  detailedProducts: DetailedProduct[];
   loadingData: boolean;
   isCreating: boolean;
   isUpdating: boolean;
