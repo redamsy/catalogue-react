@@ -1,5 +1,5 @@
 import responseHandler from "../handlers/response.handler.js";
-import categoryModel from "../models/category.model.js";
+import {categoryModel} from "../models/user.model.js";
 
 const create = async (req, res) => {
   try {

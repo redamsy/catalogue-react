@@ -1,8 +1,26 @@
-import mongoose, { Model } from "mongoose";
-import modelOptions from "./model.options.js";
+import mongoose, { Schema } from "mongoose";
 import crypto from "crypto";
 
-const userSchema = new mongoose.Schema({
+const modelOptions = {
+  toJSON: {
+    virtuals: true,
+    transform: (_, obj) => {
+      delete obj._id;
+      return obj;
+    }
+  },
+  toObject: {
+    virtuals: true,
+    transform: (_, obj) => {
+      delete obj._id;
+      return obj;
+    }
+  },
+  versionKey: false,
+  timestamps: true
+};
+
+const userSchema = new Schema({
   userName: {
     type: String,
     required: true,
@@ -54,9 +72,88 @@ userSchema.methods.validPassword = function (password) {
   return this.password === hash;
 };
 
-const userModel = mongoose.model("User", userSchema);
+export const userModel = mongoose.model("User", userSchema);
 
-export default userModel;
+export const productModel = mongoose.model(
+  "Product",
+  Schema({
+    title: {
+      type: String,
+      required: true,
+      maxlength: 50,
+    },
+    description: {
+      type: String,
+      required: true,
+      maxlength: 255,
+    },
+    imageUrl: {
+      type: String,
+      required: true,
+      maxlength: 150,
+    },
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    remaining: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 9999,
+    },
+  }, modelOptions)
+);
+
+export const categoryModel = mongoose.model(
+  "Category",
+  Schema({
+    name: {
+        type: String,
+        trim: true,
+        maxlength: 50,
+        required : [true, 'Please add a category Name'],  
+    },
+  }, modelOptions)
+);
+
+export const subCategoryModel = mongoose.model(
+  "SubCategory",
+  Schema({
+    name: {
+        type: String,
+        trim: true,
+        maxlength: 50,
+        required : [true, 'Please add a SubCategory Name'],  
+    },
+  }, modelOptions)
+);
+
+const pSCCSchema = new Schema({
+  productId: {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+      required : [true, 'PSCC must belong to a category'],
+
+  },
+  categoryId: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+      required : [true, 'PSCC must belong to a category'],
+
+  },
+  subCategoryId: {
+      type: Schema.Types.ObjectId,
+      ref: 'SubCategory',
+      required : [true, 'PSCC must belong to a subCategory'],
+  },
+}, modelOptions);
+
+pSCCSchema.index({ productId: 1, categoryId: 1, subCategoryId: 1 }, { unique: true });
+
+
+export const pSCCModel = mongoose.model('PSCC', pSCCSchema);
 
 
 // import mongoose, { Model } from "mongoose";
