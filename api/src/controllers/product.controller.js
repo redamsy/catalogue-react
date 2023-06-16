@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 import responseHandler from "../handlers/response.handler.js";
-import productModel from "../models/product.model.js";
-import pSCCModel from "../models/pSCC.model.js";
-import categoryModel from "../models/category.model.js";
-import subCategoryModel from "../models/subCategory.model.js";
-import PSCCModel from "../models/pSCC.model.js";
+import { productModel, categoryModel, subCategoryModel, pSCCModel } from "../models/user.model.js";
 
 const checkExistence = async(res, pSCCs) => {
   const categoryIds = pSCCs.map((pSCC) => pSCC.categoryId);
@@ -209,7 +205,7 @@ const remove = async (req, res) => {
 
 const getPSCCs = async (req, res) => {
   try {
-    const pSCCs = await PSCCModel.find().sort("-createdAt");
+    const pSCCs = await pSCCModel.find().sort("-createdAt");
 
     responseHandler.ok(res, pSCCs);
   } catch (error) {

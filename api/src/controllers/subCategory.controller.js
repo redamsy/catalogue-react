@@ -1,5 +1,5 @@
 import responseHandler from "../handlers/response.handler.js";
-import subCategoryModel from "../models/subCategory.model.js";
+import {subCategoryModel} from "../models/user.model.js";
 
 const create = async (req, res) => {
   try {
