@@ -6,6 +6,9 @@ import { IProductBody } from "../models/Product";
 export const initialProductContext: IProductContext = {
   state: {
     detailedProducts: [],
+    categoriesWithSubFilters: [],
+    sizeFilters: [],
+    colorFilters: [],
     loadingData: true,
     isCreating: false,
     isUpdating: false,

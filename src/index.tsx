@@ -1,6 +1,5 @@
 import React from "react";
 import { createRoot } from 'react-dom/client';
-import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { ThemeProvider } from "@mui/material/styles";
@@ -9,11 +8,11 @@ import { AuthProvider } from "./providers/authProvider";
 
 const Main = (): JSX.Element => {
   return (
-    <ThemeProvider theme={theme}>
+    // <ThemeProvider theme={theme}>
       <AuthProvider>
         <App />
       </AuthProvider>
-    </ThemeProvider>
+    // </ThemeProvider>
   );
 };
 const root = createRoot(document.getElementById("root") as HTMLElement);

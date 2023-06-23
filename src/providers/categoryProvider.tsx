@@ -79,7 +79,11 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (error: Error | any) {
       setIsCreating(false);
-      setCreateError(`Create category faild: ${error.message}`);
+      if(error?.response && error?.response?.data && error?.response?.data?.message){
+        setCreateError(`Create category faild: ${error.response.data.message}`);
+      } else {
+        setCreateError(`Create category faild: ${error.message}`);
+      }
       setOpenSnack(true);
     }
   }, [categories, clearErrorsAndCloseSnack]);
@@ -109,7 +113,11 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (error: Error | any) {
       setIsUpdating(false);
-      setUpdateError(`Update category faild: ${error.message}`);
+      if(error?.response && error?.response?.data && error?.response?.data?.message){
+        setUpdateError(`Update category faild: ${error.response.data.message}`);
+      } else {
+        setUpdateError(`Update category faild: ${error.message}`);
+      }
       setOpenSnack(true);
     }
   }, [clearErrorsAndCloseSnack]);
@@ -135,7 +143,11 @@ export const CategoryProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (error: Error | any) {
       setIsDeleting(false);
-      setDeleteError(`Delete category faild: ${error.message}`);
+      if(error?.response && error?.response?.data && error?.response?.data?.message){
+        setDeleteError(`Delete category faild: ${error.response.data.message}`);
+      } else {
+        setDeleteError(`Delete category faild: ${error.message}`);
+      }
       setOpenSnack(true);
     }
   }, [categories, clearErrorsAndCloseSnack]);

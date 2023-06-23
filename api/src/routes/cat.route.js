@@ -37,7 +37,7 @@ router.delete(
   tokenMiddleware.auth,
   categoryController.removeCategory
 );
-
+/////////////////////////////////////////////////////////////////////////
 router.get(
   "/subCategories/",
   tokenMiddleware.auth,
@@ -69,5 +69,144 @@ router.delete(
   tokenMiddleware.auth,
   categoryController.removeSubCategory
 );
+/////////////////////////////////////////////////////////////////////////
+router.get(
+  "/colors/",
+  tokenMiddleware.auth,
+  categoryController.getColors
+);
 
+router.post(
+  "/colors/",
+  tokenMiddleware.auth,
+  body("name")
+    .exists().withMessage("color name is required")
+    .isLength({ min: 1, max: 50 }).withMessage("color name can not be empty (min: 1, max: 50)"),
+  body("colorCode")
+    .exists().withMessage("color Code is required")
+    .isLength({ min: 1, max: 50 }).withMessage("color Code can not be empty (min: 1, max: 50)"),
+  requestHandler.validate,
+  categoryController.createColor
+);
+
+router.put(
+  "/colors/:colorId",
+  tokenMiddleware.auth,
+  body("name")
+    .exists().withMessage("color name is required")
+    .isLength({ min: 1, max: 50 }).withMessage("color name can not be empty (min: 1, max: 50)"),
+  body("colorCode")
+    .exists().withMessage("color Code is required")
+    .isLength({ min: 1, max: 50 }).withMessage("color Code can not be empty (min: 1, max: 50)"),
+  requestHandler.validate,
+  categoryController.updateColor
+);
+
+router.delete(
+  "/colors/:colorId",
+  tokenMiddleware.auth,
+  categoryController.removeColor
+);
+/////////////////////////////////////////////////////////////////////////
+router.get(
+  "/sizes/",
+  tokenMiddleware.auth,
+  categoryController.getSizes
+);
+
+router.post(
+  "/sizes/",
+  tokenMiddleware.auth,
+  body("name")
+    .exists().withMessage("size name is required")
+    .isLength({ min: 1, max: 50 }).withMessage("size name can not be empty (min: 1, max: 50)"),
+  requestHandler.validate,
+  categoryController.createSize
+);
+
+router.put(
+  "/sizes/:sizeId",
+  tokenMiddleware.auth,
+  body("name")
+    .exists().withMessage("size name is required")
+    .isLength({ min: 1, max: 50 }).withMessage("size name can not be empty (min: 1, max: 50)"),
+  requestHandler.validate,
+  categoryController.updateSize
+);
+
+router.delete(
+  "/sizes/:sizeId",
+  tokenMiddleware.auth,
+  categoryController.removeSize
+);
+/////////////////////////////////////////////////////////////////////////
+router.get(
+  "/images/",
+  tokenMiddleware.auth,
+  categoryController.getImages
+);
+
+router.post(
+  "/images/",
+  tokenMiddleware.auth,
+  body("name")
+    .exists().withMessage("image name is required")
+    .isLength({ min: 1, max: 50 }).withMessage("size name can not be empty (min: 1, max: 50)"),
+  body("url")
+    .exists().withMessage("image url is required")
+    .isLength({ min: 1, max: 150 }).withMessage("image url can not be empty (min: 1, max: 150)"),
+  requestHandler.validate,
+  categoryController.createImage
+);
+
+router.put(
+  "/images/:imageId",
+  tokenMiddleware.auth,
+  body("name")
+    .exists().withMessage("image name is required")
+    .isLength({ min: 1, max: 50 }).withMessage("size name can not be empty (min: 1, max: 50)"),
+  body("url")
+    .exists().withMessage("image url is required")
+    .isLength({ min: 1, max: 150 }).withMessage("image url can not be empty (min: 1, max: 150)"),
+  requestHandler.validate,
+  categoryController.updateImage
+);
+
+router.delete(
+  "/images/:imageId",
+  tokenMiddleware.auth,
+  categoryController.removeImage
+);
+/////////////////////////////////////////////////////////////////////////
+router.get(
+  "/vendors/",
+  tokenMiddleware.auth,
+  categoryController.getVendors
+);
+
+router.post(
+  "/vendors/",
+  tokenMiddleware.auth,
+  body("name")
+    .exists().withMessage("vendor name is required")
+    .isLength({ min: 1, max: 50 }).withMessage("size name can not be empty (min: 1, max: 50)"),
+  requestHandler.validate,
+  categoryController.createVendor
+);
+
+router.put(
+  "/vendors/:vendorId",
+  tokenMiddleware.auth,
+  body("name")
+    .exists().withMessage("vendor name is required")
+    .isLength({ min: 1, max: 50 }).withMessage("size name can not be empty (min: 1, max: 50)"),
+  requestHandler.validate,
+  categoryController.updateVendor
+);
+
+router.delete(
+  "/vendors/:vendorId",
+  tokenMiddleware.auth,
+  categoryController.removeVendor
+);
 export default router;

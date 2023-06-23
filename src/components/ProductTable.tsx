@@ -10,23 +10,80 @@ import {
   IconButton,
   Tooltip,
   Typography,
+  Alert,
+  Snackbar,
+  ImageList,
+  ImageListItem,
+  ImageListItemBar,
+  ListSubheader
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
+import InfoIcon from '@mui/icons-material/Info';
 import { useProductActions, useProductState } from '../context/productsContext';
-import { DetailedProduct } from '../models/Product';
+import { DetailedProduct, Gallery } from '../models/Product';
 import DeleteDialog from './DeleteDialog';
 import CreateProductModal from './CreateProductModal';
 import UpdateProductModal from './UpdateProductModal';
 import CircularProgressPage from './CircularProgressPage';
-import {
-  Alert,
-  Snackbar,
-} from "@mui/material";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { extractImageSrcFromUrl } from '../utils';
 import { ExportToCsv, Options } from 'export-to-csv-fix-source-map';
-var NotFoundImage = require('../assets/images/not-found.png');
 
+var NotFoundImage = require('../static/not-found.png');
+
+const GalleryGrid = memo(({description, galleries}: {description: string; galleries: Gallery[]}) => {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        maxWidth: '60%'
+      }}
+    >
+      <ImageList sx={{ width: 500, height: 450 }}>
+        <ImageListItem key="Subheader" cols={2}>
+          <ListSubheader component="div">Gallery</ListSubheader>
+        </ImageListItem>
+        {galleries.map((gallery) => (
+          <ImageListItem key={gallery.id}>
+            <img
+              src={extractImageSrcFromUrl(gallery.image.url) || NotFoundImage}
+              alt={gallery.image.name}
+              loading="lazy"
+            />
+            <ImageListItemBar
+              title={`Code: ${gallery.itemSubCode}`}
+              subtitle={
+                <>
+                  <div>{`Price: ${gallery.subPrice}`}</div>
+                  <div>{`Original Price: ${gallery.subOriginalPrice}`}</div>
+                  <div>{`Size: ${gallery.size.name}`}</div>
+                  <div>{`Color: ${gallery.color.name}`}</div>
+                </>
+              }
+              actionIcon={
+                <IconButton
+                  sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
+                  aria-label={`info about ${gallery.itemSubCode}`}
+                >
+                  <InfoIcon />
+                </IconButton>
+              }
+            />
+          </ImageListItem>
+        ))}
+      </ImageList>
+      <Box sx={{ width: '70%',textAlign: 'center', wordBreak: 'break-word', wordWrap: 'break-word', overflowWrap: 'break-word' }}>
+        <Typography variant="h6">&quot;Description&quot;</Typography>
+        <Typography variant='body1'>
+          {description}
+        </Typography>
+      </Box>
+    </Box>
+  );
+
+});
 
 const columns: MRT_ColumnDef<DetailedProduct>[] = [
     {
@@ -35,6 +92,15 @@ const columns: MRT_ColumnDef<DetailedProduct>[] = [
       enableColumnOrdering: false,
       enableEditing: false, //disable editing on this column
       enableSorting: false,
+    },
+    {
+      accessorKey: 'itemCode',
+      header: 'Item Code',
+    },
+    {
+      accessorFn: (row) => `${row.vendor.name}`,
+      accessorKey: 'vendor',
+      header: 'Vendor',
     },
     {
       accessorFn: (row) => `${row.title}`, //accessorFn used to join multiple data into a single cell
@@ -51,7 +117,7 @@ const columns: MRT_ColumnDef<DetailedProduct>[] = [
           <img
             alt="avatar"
             height={30}
-            src={extractImageSrcFromUrl(row.original.imageUrl) || NotFoundImage}
+            src={extractImageSrcFromUrl(row.original.image.url) || NotFoundImage}
             loading="lazy"
             style={{ borderRadius: '50%' }}
           />
@@ -79,7 +145,8 @@ const columns: MRT_ColumnDef<DetailedProduct>[] = [
       ),
     },
     {
-      accessorKey: 'imageUrl',
+      accessorFn: (row) => `${row.image.name} : ${row.image.url}`, 
+      accessorKey: 'image',
       header: 'Google Drive Public Image Url',
       enableColumnOrdering: false,
       enableEditing: false, //disable editing on this column
@@ -90,8 +157,12 @@ const columns: MRT_ColumnDef<DetailedProduct>[] = [
       header: 'Price $',
     },
     {
+      accessorKey: 'originalPrice',
+      header: 'Original Price $',
+    },
+    {
       accessorKey: 'remaining',
-      header: 'Remaining $',
+      header: 'Remaining',
     },
     {
       accessorKey: 'pSCCs',
@@ -107,9 +178,31 @@ const columns: MRT_ColumnDef<DetailedProduct>[] = [
         >
           <ul>
           {row.original.pSCCs.map((el) => (//isObjectEmpty(el.subCategory)
-            <li key={el.id} >{el.category.name} {el.subCategory.name}</li>
+            <li key={el.id} >{el.category.name} : {el.subCategory.name}</li>
           ))}
           </ul>
+        </Box>
+      ),
+    },
+    {
+      accessorKey: 'galleries',
+      header: 'Gallery(image, size, color)',
+      enableColumnFilter: false,
+      Cell: ({ row }) => (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+          }}
+        >
+          {row.original.galleries.length > 0 ? (
+            <ul>
+            {row.original.galleries.map((el) => (//isObjectEmpty(el.color)
+              <li key={el.id} >{el.itemSubCode} : {el.subPrice} : {el.subOriginalPrice} : {el.size.name} : {el.color.name} : {el.image.name} : {el.image.url}</li>
+            ))}
+            </ul>
+          ) : <></>}
         </Box>
       ),
     },
@@ -212,19 +305,25 @@ const ProductTable = memo(() => {
   const handleDeleteClose = () => {
     setDeleteOpen(false);
   };
+  const handleRemove = useCallback(async () => {
+    if (productActions) {
+      await productActions.deleteCurrentProduct(idToDelete);
+      handleDeleteClose();
+    }
+  }, [productActions, idToDelete]);
 
   const handleExportRows = (rows: MRT_Row<DetailedProduct>[]) => {
     // the order of the columns are based on the order of objects entries in the array
     csvExporter.generateCsv(rows.map((row) => {
-      const { id, title, description, imageUrl, price, remaining, createdAt, updatedAt } = row.original;
-      return { id, title, description, imageUrl, price, remaining, createdAt, updatedAt };
+      const { id, itemCode, title, description, vendor, image, price, originalPrice, remaining, createdAt, updatedAt } = row.original;
+      return { id, itemCode, title, description, vendorName: vendor.name, imageName: image.name, imageUrl: image.url, price, originalPrice, remaining, createdAt, updatedAt };
     }));
   };
   const handleExportData = useCallback(() => {
     // the order of the columns are based on the order of objects entries in the array
     csvExporter.generateCsv(detailedProducts.map((detailedProduct) => {
-      const { id, title, description, imageUrl, price, remaining, createdAt, updatedAt } = detailedProduct;
-      return { id, title, description, imageUrl, price, remaining, createdAt, updatedAt };
+      const { id, itemCode, title, description, vendor, image, price, originalPrice, remaining, createdAt, updatedAt } = detailedProduct;
+      return { id, itemCode, title, description, vendorName: vendor.name, imageName: image.name, imageUrl: image.url, price, originalPrice, remaining, createdAt, updatedAt };
     }));
   }, [detailedProducts]);
 
@@ -251,32 +350,13 @@ const ProductTable = memo(() => {
           data={detailedProducts}
           editingMode="modal" //default
           enableColumnOrdering
+          enableRowSelection
           enableEditing
           // onEditingRowSave={handleSaveRowEdits}
           // onEditingRowCancel={handleCancelRowEdits}
           // initialState={{ columnVisibility: { imageUrl: false } }} 
           renderDetailPanel={({ row }) => (
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-around',
-                alignItems: 'center',
-              }}
-            >
-              <img
-                alt="avatar"
-                height={200}
-                src={extractImageSrcFromUrl(row.original.imageUrl) || NotFoundImage}
-                loading="lazy"
-                style={{ borderRadius: '50%' }}
-              />
-              <Box sx={{ width: '70%',textAlign: 'center', wordBreak: 'break-word', wordWrap: 'break-word', overflowWrap: 'break-word' }}>
-                <Typography variant="h6">&quot;Details&quot;</Typography>
-                <Typography variant='body1'>
-                  {row.original.description}
-                </Typography>
-              </Box>
-            </Box>
+            <GalleryGrid description={row.original.description} galleries={row.original.galleries}/>
           )}
           renderRowActions={({ row, table }) => (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
@@ -297,9 +377,7 @@ const ProductTable = memo(() => {
               sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
             >
               <Button
-                onClick={() => {
-                  handleCreateOpen();
-                }}
+                onClick={handleCreateOpen}
                 variant="contained"
               >
                 Create New Product
@@ -363,10 +441,10 @@ const ProductTable = memo(() => {
       )}
       {deleteOpen && (
         <DeleteDialog
-          id={idToDelete}
           open={deleteOpen}
           isDeleting={isDeleting}
           onCancel={() => handleDeleteClose()}
+          handleRemove={handleRemove}
         />
       )}
       {openSnack ? (

@@ -19,7 +19,7 @@ const modelOptions = {
   versionKey: false,
   timestamps: true
 };
-
+//////////////////////////////////////////////////////////////////////////////////////
 const userSchema = new Schema({
   userName: {
     type: String,
@@ -71,12 +71,15 @@ userSchema.methods.validPassword = function (password) {
 
   return this.password === hash;
 };
-
 export const userModel = mongoose.model("User", userSchema);
-
-export const productModel = mongoose.model(
-  "Product",
-  Schema({
+//////////////////////////////////////////////////////////////////////////////////////
+export const productchema = new Schema({
+    itemCode: {
+      type: String,
+      required: true,
+      unique: true,
+      maxlength: 50,
+    },
     title: {
       type: String,
       required: true,
@@ -87,14 +90,24 @@ export const productModel = mongoose.model(
       required: true,
       maxlength: 255,
     },
-    imageUrl: {
-      type: String,
+    vendorId: {
+      type: Schema.Types.ObjectId,
+      ref: "Vendor",
       required: true,
-      maxlength: 150,
+    },
+    imageId: {//even though we gave a gallery, don't remove this
+      type: Schema.Types.ObjectId,
+      ref: "Image",
+      required: true,
     },
     price: {
       type: Number,
       required: true,
+      min: 0,
+    },
+    originalPrice: {
+      type: Number,
+      required: false,
       min: 0,
     },
     remaining: {
@@ -103,57 +116,144 @@ export const productModel = mongoose.model(
       min: 0,
       max: 9999,
     },
-  }, modelOptions)
-);
+  }, modelOptions);
+export const productModel = mongoose.model('Product', productchema);
+//////////////////////////////////////////////////////////////////////////////////////
+const vendorSchema = new Schema({
+  name: {
+      type: String,
+      trim: true,
+      maxlength: 50,
+      required : [true, 'Please add a vendor Name'],  
+  },
+}, modelOptions);
+export const vendorModel = mongoose.model('Vendor', vendorSchema);
+//////////////////////////////////////////////////////////////////////////////////////
+export const categorySchema = new Schema({
+  name: {
+      type: String,
+      trim: true,
+      maxlength: 50,
+      required : [true, 'Please add a category Name'],  
+  },
+}, modelOptions);
+export const categoryModel = mongoose.model('Category', categorySchema);
 
-export const categoryModel = mongoose.model(
-  "Category",
-  Schema({
-    name: {
-        type: String,
-        trim: true,
-        maxlength: 50,
-        required : [true, 'Please add a category Name'],  
-    },
-  }, modelOptions)
-);
-
-export const subCategoryModel = mongoose.model(
-  "SubCategory",
-  Schema({
-    name: {
-        type: String,
-        trim: true,
-        maxlength: 50,
-        required : [true, 'Please add a SubCategory Name'],  
-    },
-  }, modelOptions)
-);
+export const subCategorySchema = new Schema({
+  name: {
+      type: String,
+      trim: true,
+      maxlength: 50,
+      required : [true, 'Please add a SubCategory Name'],  
+  },
+}, modelOptions);
+export const subCategoryModel = mongoose.model('SubCategory', subCategorySchema);
 
 const pSCCSchema = new Schema({
   productId: {
       type: Schema.Types.ObjectId,
       ref: "Product",
-      required : [true, 'PSCC must belong to a category'],
+      required : [true, 'productId must belong to a product'],
 
   },
   categoryId: {
       type: Schema.Types.ObjectId,
       ref: "Category",
-      required : [true, 'PSCC must belong to a category'],
+      required : [true, 'categoryId must belong to a category'],
 
   },
   subCategoryId: {
       type: Schema.Types.ObjectId,
       ref: 'SubCategory',
-      required : [true, 'PSCC must belong to a subCategory'],
+      required : [true, 'subCategoryId must belong to a subCategory'],
   },
 }, modelOptions);
-
 pSCCSchema.index({ productId: 1, categoryId: 1, subCategoryId: 1 }, { unique: true });
-
-
 export const pSCCModel = mongoose.model('PSCC', pSCCSchema);
+//////////////////////////////////////////////////////////////////////////////////////
+const imageSchema = new Schema({
+  name: {
+      type: String,
+      trim: true,
+      maxlength: 50,
+      required : [true, 'Please add a image Name'],  
+  },
+  url: {
+      type: String,
+      trim: true,
+      maxlength: 150,
+      required : [true, 'Please add a image url'],  
+  },
+}, modelOptions);
+export const imageModel = mongoose.model('Image', imageSchema);
+
+export const colorSchema = new Schema({
+  name: {
+      type: String,
+      trim: true,
+      maxlength: 50,
+      required : [true, 'Please add a color Name'],  
+  },
+  colorCode: {
+      type: String,
+      trim: true,
+      maxlength: 50,
+      required : [true, 'Please add a color Code'],  
+  },
+}, modelOptions);
+export const colorModel = mongoose.model('Color', colorSchema);
+
+const  sizeSchema = new Schema({
+  name: {
+      type: String,
+      trim: true,
+      maxlength: 50,
+      required : [true, 'Please add a size Name'],  
+  },
+}, modelOptions);
+export const sizeModel = mongoose.model('Size', sizeSchema);
+
+const gallerySchema = new Schema({
+  itemSubCode: {
+    type: String,
+    required: true,
+    maxlength: 50,
+  },
+  subPrice: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+  subOriginalPrice: {
+    type: Number,
+    required: false,
+    min: 0,
+  },
+  productId: {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+      required : [true, 'productId must belong to a product'],
+
+  },
+  colorId: {
+      type: Schema.Types.ObjectId,
+      ref: "Size",
+      required : [true, 'colorId must belong to a color'],
+
+  },
+  sizeId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Color',
+      required : [true, 'sizeId must belong to a size'],
+  },
+  imageId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Image',
+      required : [true, 'imageId must belong to an image'],
+  },
+}, modelOptions);
+gallerySchema.index({ productId: 1, colorId: 1, sizeId: 1, imageId: 1 }, { unique: true });
+export const galleryModel = mongoose.model('Gallery', gallerySchema);
 
 
 // import mongoose, { Model } from "mongoose";

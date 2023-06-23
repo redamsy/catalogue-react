@@ -14,6 +14,7 @@ import {
 } from "../actions/product";
 import CircularProgressPage from "../components/CircularProgressPage";
 import { ProductContext, initialProductContext } from "../context/productsContext";
+import { generateCategoriesWithSub, generateSizesAndColors } from "../utils";
 
 export const ProductProvider = ({ children }: { children: ReactNode }) => {
 
@@ -33,6 +34,9 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
   );
   const [openSnack, setOpenSnack] = useState(initialProductContext.state.openSnack);
 
+  const categoriesWithSubFilters = useMemo(() => generateCategoriesWithSub(detailedProducts), [detailedProducts]);
+  const { sizes: sizeFilters, colors: colorFilters } = useMemo(() => generateSizesAndColors(detailedProducts), [detailedProducts]);
+  
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -81,9 +85,9 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       console.log("productProvider: createNewProduct error", error);
       setIsCreating(false);
       if(error?.response && error?.response?.data && error?.response?.data?.message){
-        setDeleteError(`Create product faild: ${error.response.data.message}`);
+        setCreateError(`Create product faild: ${error.response.data.message}`);
       } else {
-        setDeleteError(`Create product faild: ${error.message}`);
+        setCreateError(`Create product faild: ${error.message}`);
       }
       setOpenSnack(true);
     }
@@ -116,9 +120,9 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       console.log("productProvider: updateCurrentProduct error", error);
       setIsUpdating(false);
       if(error?.response && error?.response?.data && error?.response?.data?.message){
-        setDeleteError(`Update product faild: ${error.response.data.message}`);
+        setUpdateError(`Update product faild: ${error.response.data.message}`);
       } else {
-        setDeleteError(`Update product faild: ${error.message}`);
+        setUpdateError(`Update product faild: ${error.message}`);
       }
       setOpenSnack(true);
     }
@@ -167,6 +171,9 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
         updateError,
         deleteError,
         openSnack,
+        categoriesWithSubFilters,
+        sizeFilters,
+        colorFilters,
       },
       actions: { createNewProduct, updateCurrentProduct, deleteCurrentProduct, clearErrorsAndCloseSnack },
     }),
@@ -184,6 +191,9 @@ export const ProductProvider = ({ children }: { children: ReactNode }) => {
       updateError,
       deleteError,
       openSnack,
+      categoriesWithSubFilters,
+      sizeFilters,
+      colorFilters,
     ]
   );
 
