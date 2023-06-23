@@ -14,8 +14,7 @@ import { Delete, Edit } from '@mui/icons-material';
 import { useCategoryActions, useCategoryState } from '../context/categoriesContext';
 import { Category } from '../models/Category';
 import DeleteDialog from './DeleteDialog';
-import CreateCategoryModal from './CreateCategoryModal';
-import UpdateCategoryModal from './UpdateCategoryModal';
+import CreateOrUpdateCategoryModal from './CreateOrUpdateCategoryModal';
 import CircularProgressPage from './CircularProgressPage';
 import {
   Alert,
@@ -56,7 +55,7 @@ const csvExporter = new ExportToCsv(csvOptions);
 
 const CategoryTable = memo(() => {
   const categoryActions = useCategoryActions();
-  const { categories, loadingData, isDeleting, createError, updateError, deleteError, openSnack } = useCategoryState();
+  const { categories, loadingData, isCreating, isUpdating, isDeleting, createError, updateError, deleteError, openSnack } = useCategoryState();
 
   const [createOpen, setCreateOpen] = useState(false);
   const [categoryToUpdate, setCategoryToUpdate] = useState<Category | null>(null);
@@ -102,6 +101,12 @@ const CategoryTable = memo(() => {
   const handleDeleteClose = () => {
     setDeleteOpen(false);
   };
+  const handleRemove = useCallback(async () => {
+    if (categoryActions) {
+      await categoryActions.deleteCurrentCategory(idToDelete);
+      handleDeleteClose();
+    }
+  }, [categoryActions, idToDelete]);
 
   const handleExportRows = (rows: MRT_Row<Category>[]) => {
     // the order of the columns are based on the order of objects entries in the array
@@ -153,9 +158,11 @@ const CategoryTable = memo(() => {
                 </IconButton>
               </Tooltip>
               <Tooltip arrow placement="right" title="Delete">
-                <IconButton color="error" onClick={() => handleDeleteOpen(row)}>
-                  <Delete />
-                </IconButton>
+                <span>
+                  <IconButton disabled={!row.original.isDeletable} color="error" onClick={() => handleDeleteOpen(row)}>
+                    <Delete />
+                  </IconButton>
+                </span>
               </Tooltip>
             </Box>
           )}
@@ -164,9 +171,7 @@ const CategoryTable = memo(() => {
               sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
             >
               <Button
-                onClick={() => {
-                  handleCreateOpen();
-                }}
+                onClick={handleCreateOpen}
                 variant="contained"
               >
                 Create New Category
@@ -216,24 +221,28 @@ const CategoryTable = memo(() => {
         />
       )}
       {createOpen && (
-        <CreateCategoryModal
+        <CreateOrUpdateCategoryModal
           open={createOpen}
           onClose={handleCreateClose}
+          createOrUpdate={(payload) => categoryActions.createNewCategory(payload)}
+          isCreatingOrUpdating={isCreating}
         />
       )}
       {categoryToUpdate && (
-        <UpdateCategoryModal
+        <CreateOrUpdateCategoryModal
           open={updateOpen}
           onClose={handleUpdateClose}
-          category={categoryToUpdate}
+          defaultValues={categoryToUpdate}
+          createOrUpdate={(payload) => categoryActions.updateCurrentCategory(payload)}
+          isCreatingOrUpdating={isUpdating}
         />
       )}
       {deleteOpen && (
         <DeleteDialog
-          id={idToDelete}
           open={deleteOpen}
           isDeleting={isDeleting}
           onCancel={() => handleDeleteClose()}
+          handleRemove={handleRemove}
         />
       )}
       {openSnack ? (

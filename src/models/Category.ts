@@ -1,6 +1,7 @@
 export interface Category {
   id: string;
   name: string;
+  isDeletable: boolean;
 }
 
 export interface ICategoryBody {

@@ -3,19 +3,25 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-
 import CircularProgressPage from "./components/CircularProgressPage";
 import { useAuthState } from "./context/authContext";
 import { ProductProvider } from "./providers/productProvider";
-import routes from "./routes/authenticatedRoutes";
+import { unauthenticatedRoutes} from "./routes";
 import { CategoryProvider } from "./providers/categoryProvider";
 import { SubCategoryProvider } from "./providers/subCategoryProvider";
+import { AddItemNotificationProvider } from "./providers/AddItemNotificationProvider";
+import { ColorProvider } from "./providers/colorProvider";
+import { SizeProvider } from "./providers/SizeProvider";
+import { ImageProvider } from "./providers/imageProvider";
+import { VendorProvider } from "./providers/vendorProvider";
 
 const SignInPage = lazy(() => import("./pages/SignIn"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const NotFoundComponent = lazy(() => import("./components/NotFoundComponent"));
+const Dashboard = lazy(() => import("./pages/Dashboard"))
 
 const App = (): JSX.Element => {
   const { isAuthenticated } = useAuthState();
 
   useEffect(() => {
-    console.log("App.tsx: isAuthenticated", isAuthenticated)
+    console.log("App.tsx: isAuthenticated", isAuthenticated);
   }, [isAuthenticated])
   return (
     <Router>
@@ -44,28 +50,39 @@ const App = (): JSX.Element => {
           {/* You'll only need the trailing * (path='/*) when there is another <Routes> */}
           {/* if we don't want to include path : "/" then use <Outlet/>, see : https://reactrouter.com/en/main/components/outlet */}
           <Route
-            element={isAuthenticated ? (
-                <ProductProvider>
+            element={
+              <ProductProvider>
+                <AddItemNotificationProvider>
+                  <Outlet />
+                </AddItemNotificationProvider>
+              </ProductProvider>
+            }
+          >
+            <>
+              <Route
+                path={`/dashboard`}
+                element={
                   <CategoryProvider>
                     <SubCategoryProvider>
-                      <Outlet />
+                      <ColorProvider>
+                        <SizeProvider>
+                          <ImageProvider>
+                            <VendorProvider>
+                              <Dashboard />
+                            </VendorProvider>
+                          </ImageProvider>
+                        </SizeProvider>
+                      </ColorProvider>
                     </SubCategoryProvider>
                   </CategoryProvider>
-                </ProductProvider>
-              ) : (
-                // we can remove this and add a dialog inside ProdutProvider
-                //"Your session has expired"
-                //"Please log in again to continue using the app."
-                <Navigate to="/signin" />
-            )}
-          >
-              <>
-                  {/* we can't make this as a component since any direct child of <Route> should be exactly <Route> or <Routes>   */}
-                  {routes.map(({ component: Component, path }) => (
-                    <Route path={`/${path}`} key={path} element={<Component />} />
-                  ))}
-                  {/* <Outlet/> */}
-              </>
+                }
+              />
+              {/* we can't make this as a component since any direct child of <Route> should be exactly <Route> or <Routes>   */}
+              {unauthenticatedRoutes.map(({ component: Component, path }) => (
+                <Route path={`/${path}`} key={path} element={<Component />} />
+              ))}
+              {/* <Outlet/> */}
+            </>
           </Route>
           <Route path="/*" element={<NotFoundComponent />}/>
         </Routes>

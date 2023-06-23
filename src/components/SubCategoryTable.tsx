@@ -14,8 +14,7 @@ import { Delete, Edit } from '@mui/icons-material';
 import { useSubCategoryActions, useSubCategoryState } from '../context/subCategoriesContext';
 import { SubCategory } from '../models/SubCategory';
 import DeleteDialog from './DeleteDialog';
-import CreateSubCategoryModal from './CreateSubCategoryModal';
-import UpdateSubCategoryModal from './UpdateSubCategoryModal';
+import CreateOrUpdateSubCategoryModal from './CreateOrUpdateSubCategoryModal';
 import CircularProgressPage from './CircularProgressPage';
 import {
   Alert,
@@ -56,7 +55,7 @@ const csvExporter = new ExportToCsv(csvOptions);
 
 const SubCategoryTable = memo(() => {
   const subCategoryActions = useSubCategoryActions();
-  const { subCategories, loadingData, isDeleting, createError, updateError, deleteError, openSnack } = useSubCategoryState();
+  const { subCategories, loadingData, isCreating, isUpdating, isDeleting, createError, updateError, deleteError, openSnack } = useSubCategoryState();
 
   const [createOpen, setCreateOpen] = useState(false);
   const [subCategoryToUpdate, setSubCategoryToUpdate] = useState<SubCategory | null>(null);
@@ -102,6 +101,12 @@ const SubCategoryTable = memo(() => {
   const handleDeleteClose = () => {
     setDeleteOpen(false);
   };
+  const handleRemove = useCallback(async () => {
+    if (subCategoryActions) {
+      await subCategoryActions.deleteCurrentSubCategory(idToDelete);
+      handleDeleteClose();
+    }
+  }, [subCategoryActions, idToDelete]);
 
   const handleExportRows = (rows: MRT_Row<SubCategory>[]) => {
     // the order of the columns are based on the order of objects entries in the array
@@ -153,9 +158,11 @@ const SubCategoryTable = memo(() => {
                 </IconButton>
               </Tooltip>
               <Tooltip arrow placement="right" title="Delete">
-                <IconButton color="error" onClick={() => handleDeleteOpen(row)}>
-                  <Delete />
-                </IconButton>
+                <span>
+                  <IconButton disabled={!row.original.isDeletable} color="error" onClick={() => handleDeleteOpen(row)}>
+                    <Delete />
+                  </IconButton>
+                </span>
               </Tooltip>
             </Box>
           )}
@@ -164,9 +171,7 @@ const SubCategoryTable = memo(() => {
               sx={{ display: 'flex', gap: '1rem', p: '0.5rem', flexWrap: 'wrap' }}
             >
               <Button
-                onClick={() => {
-                  handleCreateOpen();
-                }}
+                onClick={handleCreateOpen}
                 variant="contained"
               >
                 Create New Sub Category
@@ -216,24 +221,28 @@ const SubCategoryTable = memo(() => {
         />
       )}
       {createOpen && (
-        <CreateSubCategoryModal
+        <CreateOrUpdateSubCategoryModal
           open={createOpen}
           onClose={handleCreateClose}
+          createOrUpdate={(payload) => subCategoryActions.createNewSubCategory(payload)}
+          isCreatingOrUpdating={isCreating}
         />
       )}
       {subCategoryToUpdate && (
-        <UpdateSubCategoryModal
+        <CreateOrUpdateSubCategoryModal
           open={updateOpen}
           onClose={handleUpdateClose}
-          subCategory={subCategoryToUpdate}
+          defaultValues={subCategoryToUpdate}
+          createOrUpdate={(payload) => subCategoryActions.updateCurrentSubCategory(payload)}
+          isCreatingOrUpdating={isUpdating}
         />
       )}
       {deleteOpen && (
         <DeleteDialog
-          id={idToDelete}
           open={deleteOpen}
           isDeleting={isDeleting}
           onCancel={() => handleDeleteClose()}
+          handleRemove={handleRemove}
         />
       )}
       {openSnack ? (

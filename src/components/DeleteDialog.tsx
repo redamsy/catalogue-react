@@ -7,23 +7,14 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { useProductActions } from "../context/productsContext";
 interface IProps {
-  id: string;
   open: boolean;
   isDeleting: boolean;
   onCancel: () => void;
+  handleRemove: () => void;
 }
 // eslint-disable-next-line react/display-name
-const DeleteAlertDialog = memo(({ id, open, isDeleting, onCancel }: IProps) => {
-  const productActions = useProductActions();
-
-  const handleRemoveProduct = async () => {
-    if (productActions) {
-      await productActions.deleteCurrentProduct(id);
-      onCancel();
-    }
-  };
+const DeleteAlertDialog = memo(({ open, isDeleting, onCancel, handleRemove }: IProps) => {
   return (
     <Dialog
       open={open}
@@ -42,7 +33,7 @@ const DeleteAlertDialog = memo(({ id, open, isDeleting, onCancel }: IProps) => {
         <Button onClick={onCancel} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleRemoveProduct} color="primary" autoFocus disabled={isDeleting}>
+        <Button onClick={handleRemove} color="primary" autoFocus disabled={isDeleting}>
             {isDeleting ? <>Please wait..</> : <>Delete</>}
         </Button>
       </DialogActions>
