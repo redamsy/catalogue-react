@@ -22,7 +22,7 @@ import {
 } from "@mui/material";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv, Options } from 'export-to-csv-fix-source-map';
-import { extractImageSrcFromUrl } from '../utils';
+import { extractImageSrcFromUrlAsThumbnail } from '../utils';
 
 var NotFoundImage = require('../static/not-found.png');
 
@@ -53,7 +53,7 @@ const columns: MRT_ColumnDef<Image>[] = [
           <img
             alt="avatar"
             height={30}
-            src={extractImageSrcFromUrl(row.original.url) || NotFoundImage}
+            src={extractImageSrcFromUrlAsThumbnail(row.original.url) || NotFoundImage}
             loading="lazy"
             style={{ borderRadius: '50%' }}
           />
@@ -280,7 +280,7 @@ const ImageTable = memo(() => {
           autoHideDuration={7000}
           onClose={handleClose}
         >
-          {(!updateError && !updateError && !deleteError) ? (
+          {(!createError && !updateError && !deleteError) ? (
             <Alert onClose={handleClose} severity="success">
               Succesful
             </Alert>

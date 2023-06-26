@@ -346,7 +346,7 @@ const UpdateProductModal = memo(({ open, onClose, product }: Props) => {
                 required
                 fullWidth
                 id="subPrice"
-                label="subPrice"//TODO: change
+                label="Sub Price"
                 type="number"
                 {...register(`galleries.${index}.subPrice`, {
                   required: 'Product price is required',

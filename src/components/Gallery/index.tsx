@@ -3,13 +3,13 @@ import React, { memo } from 'react';
 import Slider from '../Slider';
 
 import styles from './Gallery.module.css';
-import { Gallery } from '../../models/Product';
-import { extractImageSrcFromUrl } from '../../utils';
+import { extractImageSrcFromUrlAsUC } from '../../utils';
+import { Image } from '../../models/Image';
 
 var NotFoundImage = require('../../static/not-found.png');
 
 interface Props {
-  images: Gallery[];
+  images: Image[];
 }
 const GalleryGrid = memo((props: Props) => {
   const { images } = props;
@@ -22,7 +22,7 @@ const GalleryGrid = memo((props: Props) => {
     return images.map((imageObject, index) => {
       return (
         <div key={index} className={styles.imageContainer}>
-          <img alt="" src={extractImageSrcFromUrl(imageObject.image.url) || NotFoundImage} />
+          <img alt="" src={extractImageSrcFromUrlAsUC(imageObject.url) || NotFoundImage} />
         </div>
       );
     });
@@ -34,7 +34,7 @@ const GalleryGrid = memo((props: Props) => {
         {images.map((imageObject, index) => {
           return (
             <div key={index} className={styles.imageContainer}>
-              <img alt="" src={extractImageSrcFromUrl(imageObject.image.url) || NotFoundImage} />
+              <img alt="" src={extractImageSrcFromUrlAsUC(imageObject.url) || NotFoundImage} />
             </div>
           );
         })}

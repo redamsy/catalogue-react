@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { signInFn } from "../actions/signIn";
 import { signUpFn } from "../actions/signUp";
-import { getCurrentUserProfile } from "../actions/user";
+import { getCurrentUserProfile, updateRate } from "../actions/user";
 import CircularProgressPage from "../components/CircularProgressPage";
 import { AuthContext, initialContext } from "../context/authContext";
 import { ISignInBody } from "../models/SignIn";
 import { ISignUpBody } from "../models/SignUp";
-import { UserProfile } from "../models/userProfile";
+import { UserProfile, ICurrency } from "../models/userProfile";
+import { IChangePasswordBody } from "../models/ChangePassword";
+import { changePasswordFn } from "../actions/user";
 
 interface IAuthProviderProps {
   children: JSX.Element;
@@ -33,6 +35,21 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
   );
   const [signUpError, setSignUpError] = useState<string>(
     initialContext.state.signUpError
+  );
+  const [isChangingPassword, setIsChangingPassword] = useState<boolean>(
+    initialContext.state.isChangingPassword
+  );
+  const [changePasswordError, setChangePasswordError] = useState<string>(
+    initialContext.state.changePasswordError
+  );
+  const [isUpdating, setIsUpdating] = useState<boolean>(
+    initialContext.state.isUpdating
+  );
+  const [updateError, setUpdateError] = useState<string>(
+    initialContext.state.updateError
+  );
+  const [openSnack, setOpenSnack] = useState<boolean>(
+    initialContext.state.openSnack
   );
 
   useEffect(() => {
@@ -69,13 +86,19 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
     fetchUserData();
   }, []);
 
+  const clearErrorsAndCloseSnack = useCallback(() => {
+    setUpdateError("");
+    setChangePasswordError("");
+    setOpenSnack(false);
+  }, [])
+
   // used the useCallback hook to prevent the function from being recreated after a re-render
   const signUp = useCallback(async ({ name, userName, password }: ISignUpBody) => {
     try {
       setIsSigningUp(true);
       const signUpResponse = await signUpFn({ name, userName, password });
       if (signUpResponse.status === 201) {
-        console.log("authProvider: signInResponse", signUpResponse);
+        console.log("authProvider: signUpResponse", signUpResponse);
 
         // complete a successful signUp process
         setIsSigningUp(false);
@@ -145,8 +168,76 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
     }
   }, []);
 
+  const changePassword = useCallback(async ({ password, newPassword }: IChangePasswordBody) => {
+    try {
+      setIsChangingPassword(true);
+      const changePasswordResponse = await changePasswordFn({ password, newPassword });
+      if (changePasswordResponse.status === 200) {
+        console.log("authProvider: changePasswordResponse", changePasswordResponse);
+
+        // complete a successful ChangePassword process
+        setIsChangingPassword(false);
+        setChangePasswordError("");
+        setOpenSnack(true);
+      } else {
+        setIsChangingPassword(false);
+        setChangePasswordError(`ChangePassword failed. ${changePasswordResponse.status}`);
+        setOpenSnack(true);
+      }
+    } catch (error: Error | any) {
+      console.log("authProvider: error", error);
+      setIsChangingPassword(false);
+      if (error.response && error.response.data && error.response.data.message) {
+        setChangePasswordError(
+          `ChangePassword failed. ${error.response.data.message}`
+        );        
+      } else {
+        setChangePasswordError(
+          `ChangePassword failed. ${error.message}`
+        );        
+      }
+      setOpenSnack(true);
+    }
+  }, []);
+
+  const updateCurrentRate = useCallback(async (currencyBody: ICurrency) => {
+    try {
+      setIsUpdating(true);
+      const updateResponse = await updateRate(currencyBody);
+      console.log("authProvider: updateCurrentRate", updateResponse);
+      const { status, data: updatedUser } = updateResponse;
+      if (updatedUser && status === 200) {
+
+
+        if (userProfile) setUserProfile({
+          ...userProfile,
+          rate: updatedUser.rate,
+          currency: updatedUser.currency
+        })
+
+        setIsUpdating(false);
+        setUpdateError("");
+        setOpenSnack(true);
+
+      } else {
+        setIsUpdating(false);
+        setUpdateError(`Update rate faild: ${updateResponse.status}`);
+        setOpenSnack(true);
+      }
+    } catch (error: Error | any) {
+      setIsUpdating(false);
+      if(error?.response && error?.response?.data && error?.response?.data?.message){
+        setUpdateError(`Update rate faild: ${error.response.data.message}`);
+      } else {
+        setUpdateError(`Update rate faild: ${error.message}`);
+      }
+      setOpenSnack(true);
+    }
+  }, [userProfile]);
+
   // used the useCallback hook to prevent the function from being recreated after a re-render
   const signOut = useCallback(() => {
+    //TODO: better set Token in database to revoked(anyways token has expry time)
     setUserProfile(null);
     setIsAuthenticated(false);
     localStorage.removeItem("access_token");
@@ -165,13 +256,21 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
         signInError,
         isSigningUp,
         signUpError,
+        isChangingPassword,
+        changePasswordError,
+        isUpdating,
+        updateError,
+        openSnack,
       },
-      actions: { signIn, signUp, signOut },
+      actions: { signIn, signUp, signOut, changePassword, updateCurrentRate, clearErrorsAndCloseSnack },
     }),
     [
       signIn,
       signUp,
       signOut,
+      changePassword,
+      updateCurrentRate,
+      clearErrorsAndCloseSnack,
       isAuthenticated,
       userProfile,
       initialLoading,
@@ -179,6 +278,11 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
       signInError,
       isSigningUp,
       signUpError,
+      isChangingPassword,
+      changePasswordError,
+      isUpdating,
+      updateError,
+      openSnack
     ]
   );
 

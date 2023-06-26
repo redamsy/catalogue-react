@@ -255,7 +255,7 @@ const SubCategoryTable = memo(() => {
           autoHideDuration={7000}
           onClose={handleClose}
         >
-          {(!updateError && !updateError && !deleteError) ? (
+          {(!createError && !updateError && !deleteError) ? (
             <Alert onClose={handleClose} severity="success">
               Succesful
             </Alert>

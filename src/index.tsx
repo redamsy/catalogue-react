@@ -8,6 +8,7 @@ import { AuthProvider } from "./providers/authProvider";
 
 const Main = (): JSX.Element => {
   return (
+    //wrapp dashboard with this 
     // <ThemeProvider theme={theme}>
       <AuthProvider>
         <App />

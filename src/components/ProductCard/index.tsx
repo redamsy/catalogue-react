@@ -3,9 +3,10 @@ import styles from './ProductCard.module.css';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import EnhancedEncryptionOutlinedIcon from '@mui/icons-material/EnhancedEncryptionOutlined';
-import CurrencyFormatter from '../CurrencyFormatter';
+import CurrencyAndRateFormatter from '../CurrencyAndRateFormatter';
 import { useNavigate } from 'react-router-dom';
-import { extractImageSrcFromUrl } from '../../utils';
+import { extractImageSrcFromUrlAsUC } from '../../utils';
+import { useAuthState } from '../../context/authContext';
 
 var NotFoundImage = require('../../static/not-found.png');
 
@@ -21,6 +22,7 @@ interface Props {
 }
 const ProductCard = memo((props: Props) => {
   const navigate = useNavigate();
+  const { userProfile} = useAuthState();
   const [isWishlist, setIsWishlist] = useState(false);
   const {
     id,
@@ -54,7 +56,7 @@ const ProductCard = memo((props: Props) => {
         onClick={() => handleRouteToProduct()}
         role={'presentation'}
       >
-        <img style={{ height: `${height}px` }} src={extractImageSrcFromUrl(image) || NotFoundImage} alt={title}></img>
+        <img style={{ height: `${height}px` }} src={extractImageSrcFromUrlAsUC(image) || NotFoundImage} alt={title}></img>
         <div
           className={styles.bagContainer}
           role={'presentation'}
@@ -83,11 +85,11 @@ const ProductCard = memo((props: Props) => {
           <span
             className={`${originalPrice !== undefined ? styles.salePrice : ''}`}
           >
-            <CurrencyFormatter amount={price}></CurrencyFormatter>
+            <CurrencyAndRateFormatter currency ={userProfile?.currency} rate ={userProfile?.rate} amount={price} showOriginalCurrency/>
           </span>
           {originalPrice && (
             <span className={styles.originalPrice}>
-              <CurrencyFormatter amount={originalPrice}></CurrencyFormatter>
+              <CurrencyAndRateFormatter currency ={userProfile?.currency} rate ={userProfile?.rate} amount={originalPrice} showOriginalCurrency/>
             </span>
           )}
         </div>

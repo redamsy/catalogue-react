@@ -7,11 +7,17 @@ import {
   DialogTitle,
   IconButton,
   TextField,
+  FormHelperText,
 } from "@mui/material";
 import Grid from "@mui/material/Grid";
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
 import CloseIcon from "@mui/icons-material/Close";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { ICategoryBody } from "../models/Category";
+import { useImageState } from "../context/imagesContext";
 
 const style = {
   width: 400,
@@ -30,8 +36,9 @@ interface Props {
 }
 
 const CreateOrUpdateCategoryModal = memo(({ open, onClose, isCreatingOrUpdating, defaultValues, createOrUpdate }: Props) => {
-
+  const { images } = useImageState();
   const {
+    control,
     reset,
     register,
     handleSubmit,
@@ -49,10 +56,11 @@ const CreateOrUpdateCategoryModal = memo(({ open, onClose, isCreatingOrUpdating,
   //TODO: useCalBack
   async function onSubmit(data: ICategoryBody) {
     console.log("UpdateCategoryModal: onSubmit: data", data);
-    const { id, name } = data;
+    const { id, name, imageId } = data;
     const payload: ICategoryBody = {
       id,
       name,
+      imageId,
     };
       try {
         await createOrUpdate(payload);
@@ -109,6 +117,37 @@ const CreateOrUpdateCategoryModal = memo(({ open, onClose, isCreatingOrUpdating,
                   error={!!errors.name}
                   helperText={errors.name ? errors.name.message : null}
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl sx={{ width: '100%'}}>
+                  <InputLabel id={`image-select-label`}>Google Drive Public Image Url</InputLabel>
+                  <Controller
+                    rules={{required: 'Image is required'}}
+                    control={control}
+                    name='imageId'
+                    render={({ field }) => (
+                      <>
+                        <Select
+                          {...field}
+                          label="Image Url"
+                          labelId={`image-select-label`}
+                          id={`image-select`}
+                        >
+                          {images.map((image) => (
+                            <MenuItem key={image.id} value={image.id}>
+                              name: {image.name}, url: {image.url}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        {errors.imageId && (
+                          <FormHelperText error={!!errors.imageId}>
+                            {errors.imageId.message}
+                          </FormHelperText>
+                        )}
+                      </>
+                    )}
+                  />
+                </FormControl>
               </Grid>
             </Grid>
             <Button

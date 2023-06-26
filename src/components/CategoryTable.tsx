@@ -232,7 +232,11 @@ const CategoryTable = memo(() => {
         <CreateOrUpdateCategoryModal
           open={updateOpen}
           onClose={handleUpdateClose}
-          defaultValues={categoryToUpdate}
+          defaultValues={{
+            id: categoryToUpdate.id,
+            name: categoryToUpdate.name,
+            imageId: categoryToUpdate.image?.id,
+          }}
           createOrUpdate={(payload) => categoryActions.updateCurrentCategory(payload)}
           isCreatingOrUpdating={isUpdating}
         />
@@ -255,7 +259,7 @@ const CategoryTable = memo(() => {
           autoHideDuration={7000}
           onClose={handleClose}
         >
-          {(!updateError && !updateError && !deleteError) ? (
+          {(!createError && !updateError && !deleteError) ? (
             <Alert onClose={handleClose} severity="success">
               Succesful
             </Alert>

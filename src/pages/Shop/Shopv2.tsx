@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import Accordion from '../../components/Accordion';
 import Banner from '../../components/Banner';
-import Breadcrumbs from '../../components/BreadCrumbs';
+import BreadCrumbs from '../../components/BreadCrumbs';
 import Checkbox from '../../components/Checkbox';
 import Container from '../../components/Container';
 import Layout from '../../components/Layout';
@@ -93,8 +93,13 @@ const ShopV2Page = () => {
       ) : (
         <div className={styles.root}>
           <Container size={'large'} spacing={'min'}>
-            <Breadcrumbs
-              crumbs={[{ link: '/', label: 'Home' }, { label: 'Woman' }]}
+            <BreadCrumbs
+              crumbs={categoryparam ? [
+                { link: '/', label: 'Home' },
+                { link: '/', label: categoryparam },
+              ] : [
+                { link: '/', label: 'Home' },
+              ]}
             />
           </Container>
           <Banner

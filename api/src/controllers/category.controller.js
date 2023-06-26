@@ -10,39 +10,42 @@ const createCategory = async (req, res) => {
 
     await category.save();
 
-    responseHandler.created(res, {
+    //TODO: return with image url
+    return responseHandler.created(res, {
       ...category._doc,
       id: category.id,
       isDeletable: true,
     });
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
 const updateCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
-    const { name } = req.body;
+    const { name, imageId } = req.body;
 
-    const category = await categoryModel.findById(categoryId).select("id name");
+    const category = await categoryModel.findById(categoryId).select("id name imageId");
 
     if (!category) return responseHandler.notfound(res);
 
     category.name = name;
+    category.imageId = imageId;
 
     await category.save();
 
-    const isUsedInpSCC = await pSCCModel.exists({ subCategoryId: category._id });
-    responseHandler.ok(res, {
+    //TODO: return with image url
+    const isUsedInpSCC = await pSCCModel.exists({ categoryId: category._id });
+    return responseHandler.ok(res, {
       ...category._doc,
       id: category.id,
       isDeletable: isUsedInpSCC ? false: true,
     });
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -65,16 +68,54 @@ const removeCategory = async (req, res) => {
 
     await category.deleteOne();
 
-    responseHandler.ok(res);
+    return responseHandler.ok(res);
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
 const getCategories = async (req, res) => {
   try {
-    const categories = await categoryModel.find().sort("-createdAt");
+    const categories = await categoryModel.aggregate([
+      {
+        $lookup: {
+          from: "images",
+          let: { imageId: "$imageId" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$_id", "$$imageId"],
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                id: "$_id",
+                name: 1,
+                url: 1,
+                createdAt: 1,
+                updatedAt: 1,
+              },
+            },
+          ],
+          as: "image",
+        },
+      },
+      {
+        $project: {
+          id: "$_id",
+          name: 1,
+          image: {
+            $arrayElemAt: ["$image", 0],
+          },
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      },
+    ]);
 
     // Get all distinct categories (type of ObjectId) used by pSCCs
     const pSCCCategoryObjectIds = await pSCCModel.distinct("categoryId");
@@ -82,14 +123,14 @@ const getCategories = async (req, res) => {
     const usedCategoryIds = pSCCCategoryObjectIds.map(String);
     // Iterate through each category and check if it is in the usedCategoryIds array
     const categoriesWithDeletability = categories.map((category) => ({
-      ...category.toObject(),
+      ...category,
       isDeletable: !usedCategoryIds.includes(category._id.toString()),
     }));
 
-    responseHandler.ok(res, categoriesWithDeletability);
+    return responseHandler.ok(res, categoriesWithDeletability);
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 //////////////////////////////////////////////////////////////////////////////////////
@@ -101,14 +142,14 @@ const createSubCategory = async (req, res) => {
 
     await subCategory.save();
 
-    responseHandler.created(res, {
+    return responseHandler.created(res, {
       ...subCategory._doc,
       id: subCategory.id,
       isDeletable: true,
     });
   } catch(error) {
     console.log("subCategoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -126,14 +167,14 @@ const updateSubCategory = async (req, res) => {
     await subCategory.save();
 
     const isUsedInpSCC = await pSCCModel.exists({ subCategoryId: subCategory._id });
-    responseHandler.ok(res, {
+    return responseHandler.ok(res, {
       ...subCategory._doc,
       id: subCategory.id,
       isDeletable: isUsedInpSCC ? false: true,
     });
   } catch(error) {
     console.log("subCategoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -156,10 +197,10 @@ const removeSubCategory = async (req, res) => {
 
     await subCategory.deleteOne();
 
-    responseHandler.ok(res);
+    return responseHandler.ok(res);
   } catch(error) {
     console.log("subCategoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -177,10 +218,10 @@ const getSubCategories = async (req, res) => {
       isDeletable: !usedSubCategoryIds.includes(subCategory._id.toString()),
     }));
 
-    responseHandler.ok(res, subCategoriesWithDeletability);
+    return responseHandler.ok(res, subCategoriesWithDeletability);
   } catch(error) {
     console.log("subCategoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 //////////////////////////////////////////////////////////////////////////////////////
@@ -192,14 +233,14 @@ const createColor = async (req, res) => {
 
     await color.save();
 
-    responseHandler.created(res, {
+    return responseHandler.created(res, {
       ...color._doc,
       id: color.id,
       isDeletable: true,
     });
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -218,14 +259,14 @@ const updateColor = async (req, res) => {
     await color.save();
 
     const isUsedInGallery = await galleryModel.exists({ colorId: color._id });
-    responseHandler.ok(res, {
+    return responseHandler.ok(res, {
       ...color._doc,
       id: color.id,
       isDeletable: isUsedInGallery ? false: true,
     });
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -248,10 +289,10 @@ const removeColor = async (req, res) => {
 
     await color.deleteOne();
 
-    responseHandler.ok(res);
+    return responseHandler.ok(res);
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -271,10 +312,10 @@ const getColors = async (req, res) => {
       isDeletable: !usedColorIds.includes(color._id.toString()),
     }));
 
-    responseHandler.ok(res, colorsWithDeletability);
+    return responseHandler.ok(res, colorsWithDeletability);
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 //////////////////////////////////////////////////////////////////////////////////////
@@ -286,14 +327,14 @@ const createSize = async (req, res) => {
 
     await size.save();
 
-    responseHandler.created(res, {
+    return responseHandler.created(res, {
       ...size._doc,
       id: size.id,
       isDeletable: true,
     });
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -311,14 +352,14 @@ const updateSize = async (req, res) => {
     await size.save();
 
     const isUsedInGallery = await galleryModel.exists({ sizeId: size._id });
-    responseHandler.ok(res, {
+    return responseHandler.ok(res, {
       ...size._doc,
       id: size.id,
       isDeletable: isUsedInGallery ? false: true,
     });
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -341,10 +382,10 @@ const removeSize = async (req, res) => {
 
     await size.deleteOne();
 
-    responseHandler.ok(res);
+    return responseHandler.ok(res);
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -364,10 +405,10 @@ const getSizes = async (req, res) => {
       isDeletable: !usedSizeIds.includes(size._id.toString()),
     }));
 
-    responseHandler.ok(res, sizesWithDeletability);
+    return responseHandler.ok(res, sizesWithDeletability);
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 //////////////////////////////////////////////////////////////////////////////////////
@@ -379,14 +420,14 @@ const createImage = async (req, res) => {
 
     await image.save();
 
-    responseHandler.created(res, {
+    return responseHandler.created(res, {
       ...image._doc,
       id: image.id,
       isDeletable: true,
     });
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -406,14 +447,14 @@ const updateImage = async (req, res) => {
 
     const isUsedInProduct = await productModel.exists({ imageId: image._id });
     const isUsedInGallery = await galleryModel.exists({ imageId: image._id });
-    responseHandler.ok(res, {
+    return responseHandler.ok(res, {
       ...image._doc,
       id: image.id,
       isDeletable: isUsedInProduct || isUsedInGallery ? false: true,
     });
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -437,10 +478,10 @@ const removeImage = async (req, res) => {
 
     await image.deleteOne();
 
-    responseHandler.ok(res);
+    return responseHandler.ok(res);
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -463,10 +504,10 @@ const getImages = async (req, res) => {
       isDeletable: !usedImageIds.includes(image._id.toString()),
     }));
 
-    responseHandler.ok(res, imagesWithDeletability);
+    return responseHandler.ok(res, imagesWithDeletability);
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 //////////////////////////////////////////////////////////////////////////////////////
@@ -478,14 +519,14 @@ const createVendor = async (req, res) => {
 
     await vendor.save();
 
-    responseHandler.created(res, {
+    return responseHandler.created(res, {
       ...vendor._doc,
       id: vendor.id,
       isDeletable: true,
     });
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -503,14 +544,14 @@ const updateVendor = async (req, res) => {
     await vendor.save();
 
     const isUsedInProduct = await productModel.exists({ vendorId: vendor._id });
-    responseHandler.ok(res, {
+    return responseHandler.ok(res, {
       ...vendor._doc,
       id: vendor.id,
       isDeletable: isUsedInProduct ? false: true,
     });
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -533,10 +574,10 @@ const removeVendor = async (req, res) => {
 
     await vendor.deleteOne();
 
-    responseHandler.ok(res);
+    return responseHandler.ok(res);
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -559,10 +600,10 @@ const getVendors = async (req, res) => {
       isDeletable: !usedVendorIds.includes(vendor._id.toString()),
     }));
 
-    responseHandler.ok(res, vendorsWithDeletability);
+    return responseHandler.ok(res, vendorsWithDeletability);
   } catch(error) {
     console.log("categoryController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 

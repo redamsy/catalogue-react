@@ -3,6 +3,9 @@ import React, { memo } from 'react';
 import styles from './ExpandedMenu.module.css';
 import { Link, useLocation } from 'react-router-dom';
 import { CategoriesWithSub } from '../../models/Product';
+import { extractImageSrcFromUrlAsUC } from '../../utils';
+
+var NotFoundImage = require('../../static/not-found.png');
 
 const ExpandedMenu = memo((props: { menu: CategoriesWithSub[];}) => {
   const { menu } = props;
@@ -45,8 +48,8 @@ const ExpandedMenu = memo((props: { menu: CategoriesWithSub[];}) => {
         })}
       </div>
       <div className={styles.imageContainer}>
-        <img src={'/headerPic1.png'} alt={'header 1'}></img>
-        <img src={'/headerPic2.png'} alt={'header 2'}></img>
+        <img src={extractImageSrcFromUrlAsUC('https://drive.google.com/file/d/13Y8Sgt5Db-FNcFFmGvpfnrlHxybocuQ4/view?usp=sharing') || NotFoundImage} alt={'header 1'}></img>
+        <img src={extractImageSrcFromUrlAsUC('https://drive.google.com/file/d/1pxMFZO41MZoXLmiwXwEmap-g1bfOKTT_/view?usp=sharing') || NotFoundImage} alt={'header 2'}></img>
       </div>
     </div>
   );

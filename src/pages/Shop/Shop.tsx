@@ -4,7 +4,7 @@ import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import styles from './Shop.module.css';
 
 import Banner from '../../components/Banner';
-import Breadcrumbs from '../../components/BreadCrumbs';
+import BreadCrumbs from '../../components/BreadCrumbs';
 import CardController, { Filter } from '../../components/CardController';
 import Container from '../../components/Container';
 import Chip from '../../components/Chip';
@@ -15,8 +15,10 @@ import { useProductState } from '../../context/productsContext';
 import CircularProgressPage from '../../components/CircularProgressPage';
 import Pagination from '@mui/material/Pagination';
 import { generateFilteredProducts } from '../../utils';
+import { useParams } from 'react-router-dom';
 
 const Shop = () => {
+  const { categoryparam, subcategoryparam } = useParams();
   const [showFilter, setShowFilter] = useState(false);
   const { detailedProducts, loadingData } = useProductState();
 
@@ -54,6 +56,10 @@ const Shop = () => {
   const onclose = (name: string) => {
     //remove this chip name filter and close it
   }
+  // const handleSort = () => {
+  //   const sortedResult = [...filteredDetailedProducts].sort((a, b) => a.title.localeCompare(b.title));
+  //   setFilteredDetailedProducts(sortedResult);
+  // };
   const applyFilter = useCallback((filterState: Filter[]) => {
     const filtered = generateFilteredProducts(filterState, detailedProducts);
     setFilteredDetailedProducts(filtered);
@@ -67,11 +73,12 @@ const Shop = () => {
         <div className={styles.root}>
           <Container size={'large'} spacing={'min'}>
             <div className={styles.breadcrumbContainer}>
-              <Breadcrumbs
-                crumbs={[
+              <BreadCrumbs
+                crumbs={categoryparam ? [
                   { link: '/', label: 'Home' },
-                  { link: '/', label: 'Woman' },
-                  { label: 'Sweaters' },
+                  { link: '/', label: categoryparam },
+                ] : [
+                  { link: '/', label: 'Home' },
                 ]}
               />
             </div>
@@ -104,6 +111,7 @@ const Shop = () => {
               </div>
             </div>
             <CardController
+              categoryparam={categoryparam}
               totalResult={displayedProducts.length}
               applyFilter={applyFilter}
               closeFilter={() => setShowFilter(false)}

@@ -3,7 +3,7 @@ import styles from './Title.module.css';
 import { Link } from 'react-router-dom';
 
 interface Props {
-    name: string;
+    name?: string;
     subtitle?: string;
     link?: string;
     textLink?: string;

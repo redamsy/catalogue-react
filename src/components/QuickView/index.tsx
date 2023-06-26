@@ -1,15 +1,16 @@
 import React, { useState, useContext, memo, useMemo } from 'react';
 
 import Button from '../Button';
-import CurrencyFormatter from '../CurrencyFormatter';
+import CurrencyAndRateFormatter from '../CurrencyAndRateFormatter';
 import SizeList from '../SizeList';
 import SwatchList from '../SwatchList';
 import AddItemNotificationContext from '../../providers/AddItemNotificationProvider';
 import styles from './QuickView.module.css';
-import { extractImageSrcFromUrl, generateSizesAndColors } from '../../utils';
+import { extractImageSrcFromUrlAsUC, generateSizesAndColors } from '../../utils';
 import { DetailedProduct } from '../../models/Product';
 import { Size } from '../../models/Size';
 import { Color } from '../../models/Color';
+import { useAuthState } from '../../context/authContext';
 
 var NotFoundImage = require('../../static/not-found.png');
 
@@ -20,6 +21,7 @@ interface Props {
 }
 const QuickView = memo((props: Props) => {
   const { detailedProduct, close, buttonTitle = 'Add to Bag' } = props;
+  const { userProfile} = useAuthState();
 
   const { sizes: sizeOptions, colors: colorOptions  } = useMemo(() => {
     const { sizes, colors } = generateSizesAndColors([detailedProduct]);
@@ -45,10 +47,10 @@ const QuickView = memo((props: Props) => {
         <div className={styles.productContainer}>
           <span className={styles.productName}>{detailedProduct.title}</span>
           <div className={styles.price}>
-            <CurrencyFormatter amount={detailedProduct.price}></CurrencyFormatter>
+            <CurrencyAndRateFormatter currency ={userProfile?.currency} rate ={userProfile?.rate} amount={detailedProduct.price} showOriginalCurrency/>
           </div>
           <div className={styles.productImageContainer}>
-            <img alt={detailedProduct.title} src={extractImageSrcFromUrl(detailedProduct.image.url) || NotFoundImage}></img>
+            <img alt={detailedProduct.title} src={extractImageSrcFromUrlAsUC(detailedProduct.image.url) || NotFoundImage}></img>
           </div>
         </div>
 

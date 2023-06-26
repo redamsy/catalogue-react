@@ -11,6 +11,7 @@ import { ColorProvider } from "./providers/colorProvider";
 import { SizeProvider } from "./providers/SizeProvider";
 import { ImageProvider } from "./providers/imageProvider";
 import { VendorProvider } from "./providers/vendorProvider";
+import { PageProvider } from "./providers/pageProvider";
 
 const SignInPage = lazy(() => import("./pages/SignIn"));
 const SignUp = lazy(() => import("./pages/SignUp"));
@@ -51,30 +52,32 @@ const App = (): JSX.Element => {
           {/* if we don't want to include path : "/" then use <Outlet/>, see : https://reactrouter.com/en/main/components/outlet */}
           <Route
             element={
-              <ProductProvider>
-                <AddItemNotificationProvider>
-                  <Outlet />
-                </AddItemNotificationProvider>
-              </ProductProvider>
+              <PageProvider>
+                <ProductProvider>
+                  <CategoryProvider>
+                    <AddItemNotificationProvider>
+                      <Outlet />
+                    </AddItemNotificationProvider>
+                  </CategoryProvider>
+                </ProductProvider>
+              </PageProvider>
             }
           >
             <>
               <Route
                 path={`/dashboard`}
                 element={
-                  <CategoryProvider>
-                    <SubCategoryProvider>
-                      <ColorProvider>
-                        <SizeProvider>
-                          <ImageProvider>
-                            <VendorProvider>
-                              <Dashboard />
-                            </VendorProvider>
-                          </ImageProvider>
-                        </SizeProvider>
-                      </ColorProvider>
-                    </SubCategoryProvider>
-                  </CategoryProvider>
+                  <SubCategoryProvider>
+                    <ColorProvider>
+                      <SizeProvider>
+                        <ImageProvider>
+                          <VendorProvider>
+                            <Dashboard />
+                          </VendorProvider>
+                        </ImageProvider>
+                      </SizeProvider>
+                    </ColorProvider>
+                  </SubCategoryProvider>
                 }
               />
               {/* we can't make this as a component since any direct child of <Route> should be exactly <Route> or <Routes>   */}

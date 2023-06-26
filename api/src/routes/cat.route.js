@@ -3,6 +3,7 @@ import { body } from "express-validator";
 import categoryController from "../controllers/category.controller.js";
 import tokenMiddleware from "../middlewares/token.middleware.js";
 import requestHandler from "../handlers/request.handler.js";
+import { imageModel } from "../models/user.model.js";
 
 const router = express.Router({ mergeParams: true });
 
@@ -18,6 +19,13 @@ router.post(
   body("name")
     .exists().withMessage("Category name is required")
     .isLength({ min: 1, max: 50 }).withMessage("Category name can not be empty (min: 1, max: 50)"),
+  body("imageId")
+    .exists().withMessage("Product imageId is required")
+    .isLength({ min: 1, max: 50 }).withMessage("Product imageId can not be empty (min: 1, max: 50)")
+    .custom(async value => {//check if image exist
+      const image = await imageModel.exists({ _id: value });
+      if (!image) return Promise.reject("imageId does not exist in image table");
+    }),
   requestHandler.validate,
   categoryController.createCategory
 );
@@ -28,6 +36,13 @@ router.put(
   body("name")
     .exists().withMessage("Category name is required")
     .isLength({ min: 1, max: 50 }).withMessage("Category name can not be empty (min: 1, max: 50)"),
+  body("imageId")
+    .exists().withMessage("Product imageId is required")
+    .isLength({ min: 1, max: 50 }).withMessage("Product imageId can not be empty (min: 1, max: 50)")
+    .custom(async value => {//check if image exist
+      const image = await imageModel.exists({ _id: value });
+      if (!image) return Promise.reject("imageId does not exist in image table");
+    }),
   requestHandler.validate,
   categoryController.updateCategory
 );

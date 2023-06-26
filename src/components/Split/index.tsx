@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import Button from '../Button';
 import styles from './Split.module.css';
-import { extractImageSrcFromUrl } from '../../utils';
+import { extractImageSrcFromUrlAsUC } from '../../utils';
 
 var NotFoundImage = require('../../static/not-found.png');
 
@@ -31,7 +31,7 @@ const Split = memo((props: Props) => {
         </div>
       </div>
       <div className={styles.imageContainer}>
-        <img src={extractImageSrcFromUrl(image) || NotFoundImage} alt={alt}></img>
+        <img src={extractImageSrcFromUrlAsUC(image) || NotFoundImage} alt={alt}></img>
       </div>
     </div>
   );

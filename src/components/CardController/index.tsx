@@ -22,6 +22,7 @@ export interface Filter {
     }[];
 }
 interface Props {
+    categoryparam?: string;
     totalResult: number;
     visible: boolean;
     closeFilter: () => void;
@@ -56,8 +57,7 @@ const initializeFilterState = (
   ];
 };
 
-const CardController = memo(({totalResult, visible, closeFilter, applyFilter}: Props) => {
-  const { categoryparam, subcategoryparam } = useParams();
+const CardController = memo(({categoryparam, totalResult, visible, closeFilter, applyFilter}: Props) => {
   const { categoriesWithSubFilters, sizeFilters, colorFilters } = useProductState();
   const [category, setCategory] = useState<FilterWithIndex>();
 

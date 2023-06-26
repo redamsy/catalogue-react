@@ -1,6 +1,9 @@
 import React, { memo } from 'react';
 import styles from './Highlight.module.css';
 import { Link } from 'react-router-dom';
+import { extractImageSrcFromUrlAsUC } from '../../utils';
+
+var NotFoundImage = require('../../static/not-found.png');
 
 interface Props {
     image: string;
@@ -26,7 +29,7 @@ const Highlight = memo((props: Props) => {
 
   return (
     <div className={styles.root}>
-      <img alt={altImage} src={image} className={styles.highlightImage} />
+      <img alt={altImage} src={extractImageSrcFromUrlAsUC(image) || NotFoundImage} className={styles.highlightImage} />
       <div className={styles.contentContainer}>
         <h3>{title}</h3>
         <p>{description}</p>
@@ -34,7 +37,7 @@ const Highlight = memo((props: Props) => {
         <img
           className={styles.miniImage}
           alt={miniImageAlt}
-          src={miniImage}
+          src={extractImageSrcFromUrlAsUC(miniImage) || NotFoundImage}
         ></img>
       </div>
     </div>
