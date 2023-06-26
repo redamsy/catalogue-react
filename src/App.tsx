@@ -64,6 +64,11 @@ const App = (): JSX.Element => {
             }
           >
             <>
+              {/* we can't make this as a component since any direct child of <Route> should be exactly <Route> or <Routes>   */}
+              {unauthenticatedRoutes.map(({ component: Component, path }) => (
+                <Route path={`/${path}`} key={path} element={<Component />} />
+              ))}
+              {/* <Outlet/> */}
               <Route
                 path={`/dashboard`}
                 element={
@@ -80,11 +85,6 @@ const App = (): JSX.Element => {
                   </SubCategoryProvider>
                 }
               />
-              {/* we can't make this as a component since any direct child of <Route> should be exactly <Route> or <Routes>   */}
-              {unauthenticatedRoutes.map(({ component: Component, path }) => (
-                <Route path={`/${path}`} key={path} element={<Component />} />
-              ))}
-              {/* <Outlet/> */}
             </>
           </Route>
           <Route path="/*" element={<NotFoundComponent />}/>

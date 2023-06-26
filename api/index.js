@@ -1,10 +1,19 @@
 import express from "express";
-import routes from "./src/routes/index.js";
 import bodyParser from "body-parser";
 import pino from "express-pino-logger";
 import cors from "cors";
 import http from "http";
 import mongoose from "mongoose";
+
+import userRoute from "./src/routes/user.route.js";
+import productRoute from "./src/routes/product.route.js";
+import catRoute from "./src/routes/cat.route.js";
+
+const router = express.Router();
+
+router.use("/user", userRoute);
+router.use("/products", productRoute);
+router.use("/cats", catRoute);
 
 const app = express();
 app.use(cors());
@@ -12,7 +21,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(pino());
 
-app.use("/api", routes);
+app.use("/api", router);
 
 // app.get('/api/greeting', (req, res) => {
 //   try {

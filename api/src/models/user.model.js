@@ -55,8 +55,8 @@ const userSchema = new Schema({
 }, modelOptions);
 
 userSchema.methods.transform = function () {
-  const {id, userName, name} = this;
-  return {userId: id, userName, name};
+  const {id, userName, name, rate, currency } = this;
+  return {userId: id, userName, name, rate, currency };
 }
 userSchema.methods.setPassword = function (password) {
   this.salt = crypto.randomBytes(16).toString("hex");

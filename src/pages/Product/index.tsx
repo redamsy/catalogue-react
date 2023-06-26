@@ -100,7 +100,7 @@ const ProductPage = memo(() => {
                     setActiveSwatch={setActiveSwatch}
                   />
                   </div>
-                ) : <></>}
+                ) : <div>No Colors found</div>}
                 {sizeOptions ? (
                   <div className={styles.sizeContainer}>
                     <SizeList
@@ -109,7 +109,7 @@ const ProductPage = memo(() => {
                       setActiveSize={setActiveSize}
                     />
                   </div>
-                ) : <></>}
+                ) :<div>No Sizes found</div>}
 
                 <div className={styles.quantityContainer}>
                   <span>Quantity</span>
@@ -154,7 +154,7 @@ const ProductPage = memo(() => {
                     title={'Item Sub Code'}
                   >
                     <p className={styles.information}>
-                      {selectedGallery?.itemSubCode}
+                      { selectedGallery ? selectedGallery.itemSubCode : 'No Item Found with this color and size'}
                     </p>
                   </Accordion>
                   <Accordion
