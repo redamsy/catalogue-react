@@ -11,14 +11,19 @@ export const initialContext: IAuthContext = {
     signInError: "",
     isSigningUp: false,
     signUpError: "",
+    isChangingPassword: false,
+    changePasswordError: "",
+    isUpdating: false,
+    updateError: "",
+    openSnack: false,
   },
   actions: {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     signIn: async () => {},
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     signUp: async () => {},
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     signOut: () => {},
+    changePassword: async () => {},
+    updateCurrentRate: async () => {},
+    clearErrorsAndCloseSnack: () => {},
   },
 };
 

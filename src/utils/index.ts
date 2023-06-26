@@ -12,15 +12,30 @@ export const validateEmail = (email: string) =>
     );
 
 
-// const GoogleDrivePublicImageUrl = 'https://drive.google.com/file/d/1IEnoQRH8mv5NqFNuQ8PWL2YGlnL1pl8Y/view?usp=sharing';
+// const GoogleDrivePublicImageUrl = 'https://drive.google.com/file/d/1IEnoQRH8mv5NqFNuQ8PWL2YGlnL1pl8Y/view?usp=sharing';  // this can be usp=drive_link or usp=sharing
 // const imageId = '1IEnoQRH8mv5NqFNuQ8PWL2YGlnL1pl8Y';
 // const imageSrc = `https://drive.google.com/thumbnail?id=${imageId}`;
-export function extractImageSrcFromUrl(GoogleDrivePublicImageUrl: string | undefined | null): string | undefined {
+enum IMAGE_TYPE {
+  uc = 'uc', //high quality
+  thumbnail = 'thumbnail', //low quality
+}
+export function extractImageSrcFromUrlAsUC(GoogleDrivePublicImageUrl: string | undefined | null): string | undefined {
   if(GoogleDrivePublicImageUrl) {
     const fileIdMatch = GoogleDrivePublicImageUrl.match(/\/d\/([a-zA-Z0-9_-]+)\//);
       if (fileIdMatch && fileIdMatch[1]) {
         const imageId = fileIdMatch[1];
-        const imageSrc = `https://drive.google.com/thumbnail?id=${imageId}`;
+        const imageSrc = `https://drive.google.com/${IMAGE_TYPE.uc}?id=${imageId}`;
+        return imageSrc;
+      }
+  }
+  return undefined; // Return undefined if the image source couldn't be extracted
+}
+export function extractImageSrcFromUrlAsThumbnail(GoogleDrivePublicImageUrl: string | undefined | null): string | undefined {
+  if(GoogleDrivePublicImageUrl) {
+    const fileIdMatch = GoogleDrivePublicImageUrl.match(/\/d\/([a-zA-Z0-9_-]+)\//);
+      if (fileIdMatch && fileIdMatch[1]) {
+        const imageId = fileIdMatch[1];
+        const imageSrc = `https://drive.google.com/${IMAGE_TYPE.thumbnail}?id=${imageId}`;
         return imageSrc;
       }
   }

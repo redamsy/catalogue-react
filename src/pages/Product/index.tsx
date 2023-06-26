@@ -8,7 +8,6 @@ import AdjustItem from '../../components/AdjustItem';
 import Button from '../../components/Button';
 import BreadCrumbs from '../../components/BreadCrumbs';
 import Container from '../../components/Container';
-import CurrencyFormatter from '../../components/CurrencyFormatter';
 import Gallery from '../../components/Gallery';
 import SizeList from '../../components/SizeList';
 import Split from '../../components/Split';
@@ -25,9 +24,12 @@ import NotFoundComponent from '../../components/NotFoundComponent';
 import { generateSizesAndColors } from '../../utils';
 import { Size } from '../../models/Size';
 import { Color } from '../../models/Color';
+import CurrencyAndRateFormatter from '../../components/CurrencyAndRateFormatter';
+import { useAuthState } from '../../context/authContext';
 
 const ProductPage = memo(() => {
   let { itemcode } = useParams();
+  const { userProfile} = useAuthState();
   const navigate = useNavigate();
   const { detailedProducts, loadingData } = useProductState();
 
@@ -47,6 +49,13 @@ const ProductPage = memo(() => {
   const [activeSize, setActiveSize] = useState<Size | undefined>(undefined);
   const [activeSwatch, setActiveSwatch] = useState<Color | undefined>(undefined);
 
+  const { selectedGallery  } = useMemo(() => {
+    const selectedGallery = sampleProduct?.galleries.find((el) => el.color.id === activeSwatch?.id && el.size.id === activeSize?.id)
+    return { 
+      selectedGallery
+    }
+  }, [sampleProduct, activeSize, activeSwatch]);
+
   return (
     <Layout>
       {loadingData ? (
@@ -57,21 +66,30 @@ const ProductPage = memo(() => {
             <BreadCrumbs
               crumbs={[
                 { link: '/', label: 'Home' },
-                { label: 'Men', link: '/shop' },
-                { label: 'Sweater', link: '/shop' },
+                { label: 'Product' },
                 { label: `${sampleProduct.title}` },
               ]}
             />
             <div className={styles.content}>
               <div className={styles.gallery}>
-                <Gallery images={sampleProduct.galleries} />
+                <Gallery images={sampleProduct.galleries.length > 0 ? sampleProduct.galleries.map((el) => el.image) : [sampleProduct.image]} />
               </div>
+              {/* in this div we should disable all clicks(chosing color, size, quantity, bcz this is only a demostration) */}
               <div className={styles.details}>
                 <h1>{sampleProduct.title}</h1>
                 <span className={styles.vendor}> by {sampleProduct.vendor.name}</span>
 
                 <div className={styles.priceContainer}>
-                  <CurrencyFormatter appendZero amount={sampleProduct.price} />
+                  <span
+                    className={`${sampleProduct.originalPrice !== undefined ? styles.salePrice : ''}`}
+                  >
+                    <CurrencyAndRateFormatter currency ={userProfile?.currency} rate ={userProfile?.rate} amount={sampleProduct.price} showOriginalCurrency/>
+                  </span>
+                  {sampleProduct.originalPrice && (
+                    <span className={styles.originalPrice}>
+                      <CurrencyAndRateFormatter currency ={userProfile?.currency} rate ={userProfile?.rate} amount={sampleProduct.originalPrice} showOriginalCurrency/>
+                    </span>
+                  )}
                 </div>
 
                 {colorOptions ? (
@@ -128,29 +146,42 @@ const ProductPage = memo(() => {
                   <p>{sampleProduct.description}</p>
                   <span>Product code: {sampleProduct.itemCode}</span>
                 </div>
-
+                {/* ask client what he wants to put here, he might want to put 'contact inf' or 'help'*/}
                 <div className={styles.informationContainer}>
                   <Accordion
                     type={'plus'}
                     customStyle={styles}
-                    title={'composition & care'}
+                    title={'Item Sub Code'}
                   >
                     <p className={styles.information}>
-                      {sampleProduct.description}
+                      {selectedGallery?.itemSubCode}
                     </p>
                   </Accordion>
                   <Accordion
                     type={'plus'}
                     customStyle={styles}
-                    title={'delivery & returns'}
+                    title={'Item Sub Original Price'}
                   >
                     <p className={styles.information}>
-                      {sampleProduct.description}
+                      {selectedGallery ? (
+                        <>
+                          <span
+                            className={`${selectedGallery.subOriginalPrice !== undefined ? styles.salePrice : ''}`}
+                          >
+                            <CurrencyAndRateFormatter currency ={userProfile?.currency} rate ={userProfile?.rate} amount={selectedGallery.subPrice} showOriginalCurrency/>
+                          </span>
+                          {selectedGallery?.subOriginalPrice && (
+                            <span className={styles.originalPrice}>
+                              <CurrencyAndRateFormatter currency ={userProfile?.currency} rate ={userProfile?.rate} amount={selectedGallery.subOriginalPrice} showOriginalCurrency/>
+                            </span>
+                          )}
+                        </>
+                      ) : 'No Item Found with this color and size'}
                     </p>
                   </Accordion>
-                  <Accordion type={'plus'} customStyle={styles} title={'help'}>
+                  <Accordion type={'plus'} customStyle={styles} title={'delivery & returns'}>
                     <p className={styles.information}>
-                      {sampleProduct.description}
+                      Client's Delivery and Returns Policy...
                     </p>
                   </Accordion>
                 </div>
@@ -163,15 +194,14 @@ const ProductPage = memo(() => {
                 showSlider
                 height={400}
                 columns={4}
-                // TODO: should add few suggestion similar category/subcategory to current product
-                data={detailedProducts}
+                data={detailedProducts.slice(0, 3)}
               />
             </div>
           </Container>
 
           <div className={styles.attributeContainer}>
             <Split
-              image={'/cloth.png'}
+              image={'https://drive.google.com/file/d/10pX3gl3WIxAmXQsgMYQtWyQJoBgYvYFS/view?usp=sharing'}
               alt={'attribute description'}
               title={'Sustainability'}
               description={

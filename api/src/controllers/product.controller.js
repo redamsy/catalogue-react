@@ -214,12 +214,12 @@ const create = async (req, res) => {
 
     //return with pSCCs and galleries
     const detailedProduct = await getDetailedProductById(req, res, product.id)
-    responseHandler.created(res, {
+    return responseHandler.created(res, {
       ...detailedProduct
     });
   } catch(error) {
     console.log("productController: create: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -331,12 +331,12 @@ const update = async (req, res) => {
   
     //return with pSCCs and galleries
     const detailedProduct = await getDetailedProductById(req, res, product.id)
-    responseHandler.ok(res, {
+    return responseHandler.ok(res, {
       ...detailedProduct
     });
   } catch(error) {
     console.log("productController: update: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -356,10 +356,10 @@ const remove = async (req, res) => {
 
     await product.deleteOne();
 
-    responseHandler.ok(res);
+    return responseHandler.ok(res);
   } catch(error) {
     console.log("productController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -367,10 +367,10 @@ const getPSCCs = async (req, res) => {
   try {
     const pSCCs = await pSCCModel.find().sort("-createdAt");
 
-    responseHandler.ok(res, pSCCs);
+    return responseHandler.ok(res, pSCCs);
   } catch (error) {
     console.log("productController: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -522,7 +522,7 @@ const getProducts = async (req, res) => {
       },
       {
         $sort: {
-          createdAt: -1, // Sort by createdAt field in descending order
+          title: 1, // Sort by title field in ascending order
         },
       },
       {
@@ -600,10 +600,10 @@ const getProducts = async (req, res) => {
       },
     ]);
 
-    responseHandler.ok(res, products);
+    return responseHandler.ok(res, products);
   } catch (error) {
     console.log("productController: getProducts: error", error);
-    responseHandler.error(res);
+    return responseHandler.error(res);
   }
 };
 
@@ -832,7 +832,7 @@ const getDetailedProductById = async (req, res, productId) => {
     return product[0];
   } catch (error) {
     console.log("productController: getDetailedProductById: error", error);
-    responseHandler.error(res);
+    return
   }
 };
 

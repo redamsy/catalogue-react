@@ -2,19 +2,23 @@ import React, { memo } from 'react';
 import styles from './Hero.module.css';
 import Button from '../Button';
 import { Link } from 'react-router-dom';
+import { extractImageSrcFromUrlAsUC } from '../../utils';
 
 interface Props {
-    title: string;
-    subtitle?: string;
-    ctaText?: string;
-    ctaAction?: () => void
-    image: string;
-    maxWidth?: string;
-    ctaStyle?: any;
-    ctaLink?: string;
-    ctaTo?: string;
-    header?: string;
-  }
+  title?: string;
+  subtitle?: string;
+  ctaText?: string;
+  ctaAction?: () => void;
+  image?: string;
+  maxWidth?: string;
+  ctaStyle?: any;
+  ctaLink?: string;
+  ctaTo?: string;
+  header?: string;
+}
+
+var NotFoundImage = require('../../static/not-found.png');
+
 const Hero = memo((props: Props) => {
   const {
     title,
@@ -28,8 +32,9 @@ const Hero = memo((props: Props) => {
     ctaTo,
     header,
   } = props;
+
   return (
-    <div className={styles.root} style={{ backgroundImage: `url(${image})` }}>
+    <div className={styles.root} style={{ backgroundImage: `url(${extractImageSrcFromUrlAsUC(image) || NotFoundImage})` }}>
       <div className={styles.content} style={{ maxWidth: maxWidth }}>
         {header && <span className={styles.header}>{header}</span>}
         {title && <h2 className={styles.title}>{title}</h2>}

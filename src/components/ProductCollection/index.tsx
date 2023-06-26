@@ -1,9 +1,12 @@
 import React, { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './ProductCollection.module.css';
+import { extractImageSrcFromUrlAsUC } from '../../utils';
+
+var NotFoundImage = require('../../static/not-found.png');
 
 interface Props {
-    image: string;
+    image?: string;
     title: string;
     text: string;
     link: string;
@@ -17,7 +20,7 @@ const ProductCollection = memo((props: Props) => {
       role={'presentation'}
       onClick={() => navigate(link)}
       className={styles.root}
-      style={{ backgroundImage: `url(${image})` }}
+      style={{ backgroundImage: `url(${extractImageSrcFromUrlAsUC(image) || NotFoundImage})` }}
     >
       <div className={styles.content}>
         <span className={styles.title}>{title}</span>

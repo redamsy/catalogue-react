@@ -31,7 +31,7 @@ router.post(
     .isLength({ min: 1, max: 255 }).withMessage("Product description can not be empty (min: 1, max: 255)"),
   body("imageId")
     .exists().withMessage("Product imageId is required")
-    .isLength({ min: 1, max: 50 }).withMessage("Product imageId can not be empty (min: 1, max: 255)")
+    .isLength({ min: 1, max: 50 }).withMessage("Product imageId can not be empty (min: 1, max: 50)")
     .custom(async value => {//check if image exist
       const image = await imageModel.exists({ _id: value });
       if (!image) return Promise.reject("imageId does not exist in image table");
@@ -90,7 +90,7 @@ router.put(
     .isLength({ min: 1, max: 255 }).withMessage("Product description can not be empty (min: 1, max: 255)"),
   body("imageId")
     .exists().withMessage("Product imageId is required")
-    .isLength({ min: 1, max: 50 }).withMessage("Product imageId can not be empty (min: 1, max: 255)")
+    .isLength({ min: 1, max: 50 }).withMessage("Product imageId can not be empty (min: 1, max: 50)")
     .custom(async value => {//check if image exist
       const image = await imageModel.exists({ _id: value});
       if (!image) return Promise.reject("imageId does not exist in image table");

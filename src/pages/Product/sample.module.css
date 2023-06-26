@@ -32,8 +32,21 @@
 
 .priceContainer span {
     font-weight: normal;
-    font-size: 24px;
+    font-size: 20px;
     line-height: 29px;
+}
+
+.priceContainer > span:first-child {
+    margin-right: 16px;
+}
+
+.salePrice {
+    color: var(--sale);
+}
+
+.originalPrice {
+    text-decoration: line-through;
+    color: var(--grey-placeholder);
 }
 
 .vendor {

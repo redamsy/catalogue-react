@@ -41,7 +41,17 @@ const userSchema = new Schema({
     type: String,
     required: true,
     select: false
-  }
+  },
+  currency: {
+    type: String,
+    required: true,
+    maxlength: 50,
+  },
+  rate: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
 }, modelOptions);
 
 userSchema.methods.transform = function () {
@@ -72,6 +82,42 @@ userSchema.methods.validPassword = function (password) {
   return this.password === hash;
 };
 export const userModel = mongoose.model("User", userSchema);
+//////////////////////////////////////////////////////////////////////////////////////
+const attributeSchema = new Schema({
+  name: {
+    type: String,
+    unique: true,
+    required: true,
+    maxlength: 50,
+  },
+  value: {
+    type: String,
+    required: true,
+    maxlength: 255,
+  },
+}, modelOptions);
+
+const sectionSchema = new Schema({
+  name: {
+    type: String,
+    unique: true,
+    required: true,
+    maxlength: 50,
+  },
+  attributes: [attributeSchema],
+}, modelOptions);
+
+const pageSchema = new Schema({
+  slug: {
+    type: String,
+    unique: true,
+    required: true,
+    maxlength: 50,
+  },
+  sections: [sectionSchema],
+}, modelOptions);
+
+export const pageModel = mongoose.model('Page', pageSchema);
 //////////////////////////////////////////////////////////////////////////////////////
 export const productchema = new Schema({
     itemCode: {
@@ -135,6 +181,11 @@ export const categorySchema = new Schema({
       trim: true,
       maxlength: 50,
       required : [true, 'Please add a category Name'],  
+  },
+  imageId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Image',
+      required : [true, 'imageId must belong to an image'],
   },
 }, modelOptions);
 export const categoryModel = mongoose.model('Category', categorySchema);

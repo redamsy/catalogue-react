@@ -59,7 +59,7 @@ export interface IProductBody {
   originalPrice?: number;
   remaining: number;
   pSCCs: PSCCIDS[];
-  galleries?: GalleryInput[];
+  galleries: GalleryInput[];
 }
 
 export interface CategoriesWithSub {

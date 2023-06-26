@@ -26,7 +26,7 @@ import CreateProductModal from './CreateProductModal';
 import UpdateProductModal from './UpdateProductModal';
 import CircularProgressPage from './CircularProgressPage';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { extractImageSrcFromUrl } from '../utils';
+import { extractImageSrcFromUrlAsThumbnail } from '../utils';
 import { ExportToCsv, Options } from 'export-to-csv-fix-source-map';
 
 var NotFoundImage = require('../static/not-found.png');
@@ -48,7 +48,7 @@ const GalleryGrid = memo(({description, galleries}: {description: string; galler
         {galleries.map((gallery) => (
           <ImageListItem key={gallery.id}>
             <img
-              src={extractImageSrcFromUrl(gallery.image.url) || NotFoundImage}
+              src={extractImageSrcFromUrlAsThumbnail(gallery.image.url) || NotFoundImage}
               alt={gallery.image.name}
               loading="lazy"
             />
@@ -117,7 +117,7 @@ const columns: MRT_ColumnDef<DetailedProduct>[] = [
           <img
             alt="avatar"
             height={30}
-            src={extractImageSrcFromUrl(row.original.image.url) || NotFoundImage}
+            src={extractImageSrcFromUrlAsThumbnail(row.original.image.url) || NotFoundImage}
             loading="lazy"
             style={{ borderRadius: '50%' }}
           />

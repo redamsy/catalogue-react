@@ -1,6 +1,9 @@
 import React, { memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './BlogPreview.module.css';
+import { extractImageSrcFromUrlAsUC } from '../../utils';
+
+var NotFoundImage = require('../../static/not-found.png');
 
 interface Props {
     image: string;
@@ -26,7 +29,7 @@ const BlogPreview = memo((props: Props) => {
       <img
         className={styles.blogPreviewImage}
         alt={altImage}
-        src={image}
+        src={extractImageSrcFromUrlAsUC(image) || NotFoundImage}
         role={'figure'}
       />
       <span className={styles.category}>{category}</span>
