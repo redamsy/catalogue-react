@@ -25,7 +25,7 @@ const App = (): JSX.Element => {
     console.log("App.tsx: isAuthenticated", isAuthenticated);
   }, [isAuthenticated])
   return (
-    <Router basename='/'>
+    <Router>
       <Suspense fallback={<CircularProgressPage />}>
         <Routes>
           <Route
