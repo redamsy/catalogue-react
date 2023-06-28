@@ -17,6 +17,7 @@ const SignInPage = lazy(() => import("./pages/SignIn"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const NotFoundComponent = lazy(() => import("./components/NotFoundComponent"));
 const Dashboard = lazy(() => import("./pages/Dashboard"))
+const Shop = lazy(() => import("./pages/Shop/Shop"));
 
 const App = (): JSX.Element => {
   const { isAuthenticated } = useAuthState();
@@ -64,10 +65,11 @@ const App = (): JSX.Element => {
             }
           >
             <>
+              <Route path={`/`} element={<Shop />} />
               {/* we can't make this as a component since any direct child of <Route> should be exactly <Route> or <Routes>   */}
-              {unauthenticatedRoutes.map(({ component: Component, path }) => (
+              {/* {unauthenticatedRoutes.map(({ component: Component, path }) => (
                 <Route path={`/${path}`} key={path} element={<Component />} />
-              ))}
+              ))} */}
               {/* <Outlet/> */}
               <Route
                 path={`/dashboard`}
