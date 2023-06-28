@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-
 import CircularProgressPage from "./components/CircularProgressPage";
 import { useAuthState } from "./context/authContext";
 import { ProductProvider } from "./providers/productProvider";
-import { unauthenticatedRoutes} from "./paths";
+import { unauthenticatedRoutes} from "./routes";
 import { CategoryProvider } from "./providers/categoryProvider";
 import { SubCategoryProvider } from "./providers/subCategoryProvider";
 import { AddItemNotificationProvider } from "./providers/AddItemNotificationProvider";
