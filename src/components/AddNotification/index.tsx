@@ -6,12 +6,13 @@ import Button from '../Button';
 
 import styles from './AddNotification.module.css';
 import { Link } from 'react-router-dom';
+import { extractImageSrcFromUrlAsUC } from '../../utils';
 
-var sweaterImage = require('../../static/pdp1.jpeg');
+var NotFoundImage = require('../../static/not-found.png');
 
 const AddNotification = memo((props : { openCart: () => void }) => {
   const sampleCartItem = {
-    image: sweaterImage,
+    image: 'https://drive.google.com/file/d/16Wx4l9tIC_E6bVafKm7wgI6CYPT1PzdH/view?usp=drive_link',
     alt: '',
     name: 'Lambswool Crew Neck Jumper',
     price: 220,
@@ -37,7 +38,7 @@ const AddNotification = memo((props : { openCart: () => void }) => {
 
       <div className={styles.newItemContainer}>
         <div className={styles.imageContainer}>
-          <img alt={sampleCartItem.alt} src={sampleCartItem.image} />
+          <img alt={sampleCartItem.alt} src={extractImageSrcFromUrlAsUC(sampleCartItem.image) || NotFoundImage} />
         </div>
         <div className={styles.detailContainer}>
           <span className={styles.name}>{sampleCartItem.name}</span>

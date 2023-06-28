@@ -6,6 +6,9 @@ import CurrencyFormatter from '../CurrencyFormatter';
 import RemoveItem from '../RemoveItem';
 
 import styles from './MiniCartItem.module.css';
+import { extractImageSrcFromUrlAsUC } from '../../utils';
+
+var NotFoundImage = require('../../static/not-found.png');
 
 const MiniCartItem = memo((props: {
     image: string;
@@ -25,7 +28,7 @@ const MiniCartItem = memo((props: {
         role={'presentation'}
         onClick={() => navigate('/product/sample')}
       >
-        <img src={image} alt={alt} />
+        <img src={extractImageSrcFromUrlAsUC(image) || NotFoundImage} alt={alt} />
       </div>
       <div className={styles.detailsContainer}>
         <div className={styles.metaContainer}>

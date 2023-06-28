@@ -7,13 +7,11 @@ import MiniCartItem from '../MiniCartItem';
 
 import styles from './MiniCart.module.css';
 
-var sweaterImage = require('../../static/pdp1.jpeg');
-
 const MiniCart = memo(() => {
   const navigate = useNavigate();
   // TODO: need new table cart(userId, productId, galleryId(optional))
   const sampleCartItem = {
-    image: sweaterImage,
+    image: 'https://drive.google.com/file/d/16Wx4l9tIC_E6bVafKm7wgI6CYPT1PzdH/view?usp=drive_link',
     alt: '',
     name: 'Lambswool Crew Neck Jumper',
     price: 220,

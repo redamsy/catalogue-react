@@ -64,7 +64,7 @@ const QuickView = memo((props: Props) => {
           </div>
         ) : <></>}
 
-        {colorOptions ? (
+        {sizeOptions ? (
           <div className={styles.sectionContainer}>
             <SizeList
               sizeList={sizeOptions}

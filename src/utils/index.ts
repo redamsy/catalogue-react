@@ -22,22 +22,22 @@ enum IMAGE_TYPE {
 export function extractImageSrcFromUrlAsUC(GoogleDrivePublicImageUrl: string | undefined | null): string | undefined {
   if(GoogleDrivePublicImageUrl) {
     const fileIdMatch = GoogleDrivePublicImageUrl.match(/\/d\/([a-zA-Z0-9_-]+)\//);
-      if (fileIdMatch && fileIdMatch[1]) {
-        const imageId = fileIdMatch[1];
-        const imageSrc = `https://drive.google.com/${IMAGE_TYPE.uc}?id=${imageId}`;
-        return imageSrc;
-      }
+    if (fileIdMatch && fileIdMatch[1]) {
+      const imageId = fileIdMatch[1];
+      const imageSrc = `https://drive.google.com/${IMAGE_TYPE.uc}?id=${imageId}`;
+      return imageSrc;
+    }
   }
   return undefined; // Return undefined if the image source couldn't be extracted
 }
 export function extractImageSrcFromUrlAsThumbnail(GoogleDrivePublicImageUrl: string | undefined | null): string | undefined {
   if(GoogleDrivePublicImageUrl) {
     const fileIdMatch = GoogleDrivePublicImageUrl.match(/\/d\/([a-zA-Z0-9_-]+)\//);
-      if (fileIdMatch && fileIdMatch[1]) {
-        const imageId = fileIdMatch[1];
-        const imageSrc = `https://drive.google.com/${IMAGE_TYPE.thumbnail}?id=${imageId}`;
-        return imageSrc;
-      }
+    if (fileIdMatch && fileIdMatch[1]) {
+      const imageId = fileIdMatch[1];
+      const imageSrc = `https://drive.google.com/${IMAGE_TYPE.thumbnail}?id=${imageId}`;
+      return imageSrc;
+    }
   }
   return undefined; // Return undefined if the image source couldn't be extracted
 }

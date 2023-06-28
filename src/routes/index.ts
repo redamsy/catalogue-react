@@ -8,7 +8,7 @@ enum Params {
 
 export const unauthenticatedRoutes = [
   {
-    path: "",
+    path: "/",
     component: lazy(() => import("../pages/Home")),
   },
   {
