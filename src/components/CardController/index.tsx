@@ -208,31 +208,9 @@ const CardController = memo(({categoryparam, totalResult, visible, closeFilter, 
             )}
 
             <div className={styles.mobileButtonContainer}>
-              {category === undefined && (
-                <Button
-                onClick={() => {
-                  applyFilter(filterState);
-                  closeFilter();
-                  return;
-                }}
-                fullWidth
-                level={'primary'}
-              >
-                  {`show results: ${totalResult}`}
-                </Button>
-              )}
+         
               {category !== undefined && (
                 <div>
-                  <Button
-                    onClick={() => {
-                      applyFilter(filterState);
-                      closeFilter();
-                      return;
-                    }}
-                    fullWidth level={'primary'}
-                  >
-                    Apply
-                  </Button>
                   <div
                     className={styles.clearFilterContainer}
                     role={'presentation'}

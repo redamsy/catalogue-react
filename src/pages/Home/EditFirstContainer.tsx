@@ -171,37 +171,6 @@ const EditFirstContainer = memo((props: Props) => {
                 helperText={errors[FormFieldsEnum.subtitle] ? errors[FormFieldsEnum.subtitle]?.message : null}
               />
             </Grid>
-            <Grid
-              container
-              item
-              spacing={1}
-              justifyContent="center"
-              alignItems="center"
-              xs={12}
-            >
-              <Grid item xs={6}>
-                <Button
-                  className={`${ctaStyle}`}
-                  disabled={isCreatingOrUpdating}
-                  type="submit"
-                  level={'primary'}
-                  fullWidth
-                >
-                  {isCreatingOrUpdating ? 'Please wait..' : 'Submit'}
-                </Button>
-              </Grid>
-              <Grid item xs={6}>
-                <Button
-                  className={`${ctaStyle}`}
-                  disabled={isCreatingOrUpdating}
-                  level={'primary'}
-                  fullWidth
-                  onClick={handleCancel}
-                >
-                  {isCreatingOrUpdating ? 'Please wait..' : 'Cancel'}
-                </Button>
-              </Grid>
-            </Grid>
           </Grid>
         </form>
       </div>

@@ -117,15 +117,7 @@ const ProductPage = memo(() => {
                 </div>
 
                 <div className={styles.actionContainer}>
-                  <div className={styles.addToButtonContainer}>
-                    <Button
-                      onClick={() => showNotification()}
-                      fullWidth
-                      level={'primary'}
-                    >
-                      Add to Bag
-                    </Button>
-                  </div>
+
                   <div
                     className={styles.wishlistActionContainer}
                     role={'presentation'}
