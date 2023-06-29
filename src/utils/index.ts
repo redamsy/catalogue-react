@@ -1,8 +1,13 @@
-import { Filter } from "../components/CardController";
 import { Color } from "../models/Color";
 import { CategoriesWithSub, DetailedProduct } from "../models/Product";
 import { Size } from "../models/Size";
-
+export interface Filter {
+  category: 'categories' | 'sizes' | 'colors';
+  items: {
+      name: string;
+      value: boolean;
+  }[];
+}
 export const validateEmail = (email: string) =>
   !!email.length &&
   email
