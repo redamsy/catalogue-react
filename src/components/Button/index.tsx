@@ -1,7 +1,5 @@
 import React, { memo } from 'react';
 
-import styles from './Button.module.css';
-import { Link } from 'react-router-dom';
 
 interface Props {
   children: string;
