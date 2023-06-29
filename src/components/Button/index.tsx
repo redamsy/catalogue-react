@@ -7,7 +7,7 @@ interface Props {
   children: string;
   href?: string;
   target?: string;
-  level: string;
+  level: 'primary' | 'secondary';
   type?: "button" | "submit" | "reset";
   size?: string;
   disabled?: boolean;
@@ -38,22 +38,22 @@ const Button = memo(({
   if (level in styles) {
     classes.push(styles[level]);
   }
-  if (size && size in styles) {
-    classes.push(styles[size]);
-  }
-  if (theme && theme in styles) {
-    classes.push(styles[theme]);
-  }
+  // if (size && size in styles) {
+  //   classes.push(styles[size]);
+  // }
+  // if (theme && theme in styles) {
+  //   classes.push(styles[theme]);
+  // }
 
   if (disabled) {
     classes.push(styles.disabled);
   }
-  if (flat) {
-    classes.push(styles.flat);
-  }
-  if (link) {
-    classes.push(styles.link);
-  }
+  // if (flat) {
+  //   classes.push(styles.flat);
+  // }
+  // if (link) {
+  //   classes.push(styles.link);
+  // }
   if (fullWidth) {
     classes.push(styles.fullWidth);
   }

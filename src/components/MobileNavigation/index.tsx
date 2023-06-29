@@ -39,6 +39,7 @@ const MobileNavigation = memo((props: { categoriesWithSub: CategoriesWithSub[]; 
 
   const handleLogout = () => {
     signOut();
+    close();
   };
 
   return (

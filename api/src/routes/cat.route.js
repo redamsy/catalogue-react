@@ -9,7 +9,6 @@ const router = express.Router({ mergeParams: true });
 
 router.get(
   "/categories/",
-  tokenMiddleware.auth,
   categoryController.getCategories
 );
 
