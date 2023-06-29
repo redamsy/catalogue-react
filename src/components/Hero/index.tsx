@@ -39,15 +39,7 @@ const Hero = memo((props: Props) => {
         {header && <span className={styles.header}>{header}</span>}
         {title && <h2 className={styles.title}>{title}</h2>}
         {subtitle && <span className={styles.subtitle}>{subtitle}</span>}
-        {ctaText && (
-          <Button
-            className={`${styles.ctaButton} ${ctaStyle}`}
-            level={'primary'}
-            onClick={ctaAction}
-          >
-            {ctaText}
-          </Button>
-        )}
+
         {ctaLink && ctaTo && (
           <Link className={styles.ctaLink} to={ctaTo}>
             {ctaLink}

@@ -48,9 +48,7 @@ const AddNotification = memo((props : { openCart: () => void }) => {
       </div>
 
       <div className={styles.actionContainer}>
-        <Button onClick={props.openCart} level={'secondary'}>
-          view my bag (1)
-        </Button>
+  
         {/* <Button level="primary" href="/cart">
           checkout
         </Button> */}

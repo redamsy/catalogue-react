@@ -153,35 +153,7 @@ const EditSocialMediaContainer = memo((props: Props) => {
           <CustomFieldInput fieldName={FormFieldsEnum.image3} fieldValue={socialMediaContainerAttributesObject?.image3} />
           <CustomFieldInput fieldName={FormFieldsEnum.image4} fieldValue={socialMediaContainerAttributesObject?.image4} />
         </div>
-        <Grid
-          container
-          item
-          spacing={1}
-          justifyContent="center"
-          alignItems="center"
-          xs={12}
-        >
-          <Grid item xs={6}>
-            <Button
-              disabled={isCreatingOrUpdating}
-              type="submit"
-              level={'primary'}
-              fullWidth
-            >
-              {isCreatingOrUpdating ? 'Please wait..' : 'Submit'}
-            </Button>
-          </Grid>
-          <Grid item xs={6}>
-            <Button
-              disabled={isCreatingOrUpdating}
-              level={'primary'}
-              fullWidth
-              onClick={handleCancel}
-            >
-              {isCreatingOrUpdating ? 'Please wait..' : 'Cancel'}
-            </Button>
-          </Grid>
-        </Grid>
+
       </div>
     </form>
   );
