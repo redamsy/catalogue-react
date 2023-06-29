@@ -25,7 +25,9 @@ const Split = memo((props: Props) => {
         <div className={styles.detailContainer}>
           <h4>{title}</h4>
           <p>{description}</p>
- 
+          <Button className={styles.button} level={'primary'} onClick={cta}>
+            {ctaText}
+          </Button>
         </div>
       </div>
       <div className={styles.imageContainer}>

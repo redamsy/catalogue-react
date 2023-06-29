@@ -48,10 +48,12 @@ const AddNotification = memo((props : { openCart: () => void }) => {
       </div>
 
       <div className={styles.actionContainer}>
-  
-        {/* <Button level="primary" href="/cart">
+        <Button onClick={props.openCart} level={'secondary'}>
+          view my bag (1)
+        </Button>
+        <Button level="primary" href="/cart">
           checkout
-        </Button> */}
+        </Button>
         <div className={styles.linkContainer}>
           <Link to={'/shop'}>continue shopping</Link>
         </div>

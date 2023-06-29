@@ -38,7 +38,9 @@ const MiniCart = memo(() => {
           <span className={styles.taxNotes}>
             Taxes and shipping will be calculated at checkout
           </span>
-
+          <Button onClick={() => navigate('/cart')} level={'primary'} fullWidth>
+            checkout
+          </Button>
           <div className={styles.linkContainer}>
             <Link to={'/shop'}>continue shopping</Link>
           </div>
