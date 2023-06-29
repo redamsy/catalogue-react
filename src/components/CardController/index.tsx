@@ -146,26 +146,6 @@ const CardController = memo(({categoryparam, totalResult, visible, closeFilter, 
               })}
           </div>
         </Container>
-        <div className={styles.actionContainer}>
-          <Button
-            onClick={() => {
-              applyFilter(filterState);
-              closeFilter();
-              return;
-            }}
-            className={styles.customButtonStyling}
-            level={'primary'}
-          >
-            view items
-          </Button>
-          <Button
-            onClick={closeFilter}
-            className={styles.customButtonStyling}
-            level={'secondary'}
-          >
-            close
-          </Button>
-        </div>
       </div>
       <div className={styles.mobileRoot}>
         <Drawer visible={visible} close={closeFilter}>
