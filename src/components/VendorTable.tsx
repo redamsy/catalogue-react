@@ -24,8 +24,6 @@ import {
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { ExportToCsv, Options } from 'export-to-csv-fix-source-map';
 
-var NotFoundVendor = require('../static/not-found.png');
-
 const columns: MRT_ColumnDef<Vendor>[] = [
     {
       accessorKey: 'id',

@@ -6,7 +6,6 @@ import styles from './CardController.module.css';
 import Button from '../Button';
 import Drawer from '../Drawer';
 import { useProductState } from '../../context/productsContext';
-import { useParams } from 'react-router-dom';
 import { CategoriesWithSub } from '../../models/Product';
 import { Color } from '../../models/Color';
 import { Size } from '../../models/Size';
