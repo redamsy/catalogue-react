@@ -15,8 +15,4 @@ export const unauthenticatedRoutes = [
     path: `/shop/:${Params.categoryparam}?/:${Params.subcategoryparam}?`,
     component: lazy(() => import("../pages/Shop/Shop")),
   },
-  {
-    path: `/shopv2/:${Params.categoryparam}?/:${Params.subcategoryparam}?`,
-    component: lazy(() => import("../pages/Shop/Shopv2")),
-  },
 ];
