@@ -10,21 +10,21 @@ import CircularProgressPage from '../../components/CircularProgressPage';
 import Pagination from '@mui/material/Pagination';
 
 const Shop = () => {
-  const { products, loadingData } = useProductState();
+  const { detailedProducts, loadingData } = useProductState();
 
   // start of pagination logic
   const [currentPage, setCurrentPage] = useState(1); // Current page number
   const [itemsPerPage] = useState(6); // Number of items to display per page
 
   const { totalItems, totalPages, startIndex, endIndex, displayedProducts } = useMemo(() => {
-    const totalItems = products.length; // Total number of items in the array
+    const totalItems = detailedProducts.length; // Total number of items in the array
     const totalPages = Math.ceil(totalItems / itemsPerPage); // Total number of pages
     const startIndex = (currentPage - 1) * itemsPerPage; // Index of the first item to display on the current page
     const endIndex = startIndex + itemsPerPage; // Index of the last item to display on the current page
-    const displayedProducts = products.slice(startIndex, endIndex); // Array of products to display on the current page
+    const displayedProducts = detailedProducts.slice(startIndex, endIndex); // Array of products to display on the current page
   
     return { totalItems, totalPages, startIndex, endIndex, displayedProducts };
-  }, [products, currentPage, itemsPerPage]);
+  }, [detailedProducts, currentPage, itemsPerPage]);
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
     setCurrentPage(page);
