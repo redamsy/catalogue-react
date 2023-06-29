@@ -35,9 +35,9 @@ const Button = memo(({
 }: Props) => {
   const classes = level ? [styles.button] : [styles.link];
 
-  if (level in styles) {
-    classes.push(styles[level]);
-  }
+  // if (level in styles) {
+  //   classes.push(styles[level]);
+  // }
   // if (size && size in styles) {
   //   classes.push(styles[size]);
   // }
