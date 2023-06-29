@@ -1,5 +1,7 @@
 import React, { memo } from 'react';
 
+import styles from './Button.module.css';
+import { Link } from 'react-router-dom';
 
 interface Props {
   children: string;
@@ -31,11 +33,11 @@ const Button = memo(({
   fullWidth,
   theme,
 }: Props) => {
-  // const classes = level ? [styles.button] : [styles.link];
+  const classes = level ? [styles.button] : [styles.link];
 
-  // if (level in styles) {
-  //   classes.push(styles[level]);
-  // }
+  if (level in styles) {
+    classes.push(styles[level]);
+  }
   // if (size && size in styles) {
   //   classes.push(styles[size]);
   // }
@@ -43,27 +45,52 @@ const Button = memo(({
   //   classes.push(styles[theme]);
   // }
 
-  // if (disabled) {
-  //   classes.push(styles.disabled);
-  // }
+  if (disabled) {
+    classes.push(styles.disabled);
+  }
   // if (flat) {
   //   classes.push(styles.flat);
   // }
   // if (link) {
   //   classes.push(styles.link);
   // }
-  // if (fullWidth) {
-  //   classes.push(styles.fullWidth);
-  // }
-  // if (className) {
-  //   classes.push(className);
-  // }
+  if (fullWidth) {
+    classes.push(styles.fullWidth);
+  }
+  if (className) {
+    classes.push(className);
+  }
 
-  // const classOutput = classes.join(' ');
+  const classOutput = classes.join(' ');
   return (
-    <div>
-      
-    </div>
+    <>
+      {href && target && (
+        <a
+          href={href}
+          target="_blank"
+          rel="noreferrer noopener"
+          className={classOutput}
+          onClick={onClick}
+        >
+          {children}
+        </a>
+      )}
+      {href && !target && (
+        <Link to={href} className={classOutput} onClick={onClick}>
+          {children}
+        </Link>
+      )}
+      {!href && (
+        <button
+          className={classOutput}
+          onClick={onClick}
+          type={type}
+          disabled={disabled}
+        >
+          {children}
+        </button>
+      )}
+    </>
   );
 });
 
