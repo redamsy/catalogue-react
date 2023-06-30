@@ -107,7 +107,27 @@ const Header = memo(() => {
           <Container size={'large'} spacing={'min'}>
             {/* header container */}
             <div className={styles.header}>
-              
+              <div className={styles.linkContainer}>
+                <nav
+                  role={'presentation'}
+                  onMouseLeave={() => {
+                    setShowMenu(false);
+                  }}
+                >
+                  {Config.headerLinks.map((navObject) => (
+                    <Link
+                      key={navObject.menuLink}
+                      onMouseEnter={() => handleHover(navObject)}
+                      className={`${styles.navLink} ${
+                        activeMenu === navObject.menuLabel ? styles.activeLink : ''
+                      }`}
+                      to={navObject.menuLink}
+                    >
+                      {navObject.menuLabel}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
               <div
                 role={'presentation'}
                 onClick={() => {
@@ -131,7 +151,20 @@ const Header = memo(() => {
                 >
                   <SearchIcon/>
                 </button>
-               
+                <Link
+                  aria-label="Favorites"
+                  to={!isAuthenticated ? '/signin' : "/account/favorites"}
+                  className={`${styles.iconContainer} ${styles.hideOnMobile}`}
+                >
+                  <FavoriteBorderIcon/>
+                </Link>
+                <Link
+                  aria-label="Orders"
+                  to={!isAuthenticated ? '/signin' : '/account/orders/'}
+                  className={`${styles.iconContainer} ${styles.hideOnMobile}`}
+                >
+                  <AccountCircleOutlinedIcon/>
+                </Link>
                 <button
                   aria-label="Cart"
                   className={`${styles.iconButton} ${styles.iconContainer} ${styles.bagIconContainer}`}
