@@ -1,15 +1,12 @@
 import React, { memo } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import styles from './Brand.module.css';
 
 const Brand = memo(() => {
-  const navigate = useNavigate();
   return (
     <div
       className={styles.root}
       role={'presentation'}
-      onClick={() => navigate('/dashboard')}
     >
       {/* <h4>SYDNEY</h4> */}
       <svg
