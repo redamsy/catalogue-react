@@ -64,17 +64,7 @@ const Button = memo(({
   const classOutput = classes.join(' ');
   return (
     <>
-      {href && target && (
-        <a
-          href={href}
-          target="_blank"
-          rel="noreferrer noopener"
-          className={classOutput}
-          onClick={onClick}
-        >
-          {children}
-        </a>
-      )}
+      
       {href && !target && (
         <Link to={href} className={classOutput} onClick={onClick}>
           {children}
