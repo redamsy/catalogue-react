@@ -46,12 +46,7 @@ const MobileNavigation = memo((props: { categoriesWithSub: CategoriesWithSub[]; 
     <div className={styles.root}>
       <nav>
         <div className={styles.headerAuth}>
-          {depth === 0 && isAuthenticated === false && (
-            <div className={styles.authLinkContainer}>
-              <Link to={'/signup'}>Sign Up</Link>
-              <Link to={'/signin'}>Sign In</Link>
-            </div>
-          )}
+    
 
           {depth === 0 && isAuthenticated === true && (
             <div
@@ -105,87 +100,12 @@ const MobileNavigation = memo((props: { categoriesWithSub: CategoriesWithSub[]; 
         </div>
 
         <div className={styles.mobileNavContainer}>
-          {/* dynamic portion */}
-          {depth === 0 && (
-            <div>
-              {Config.headerLinks.map((navObject: NavObject) => {
-                const hasSubmenu = navObject.menuLabel === 'Shop';
-                return (
-                  <Link
-                    key={navObject.menuLink}
-                    className={`${styles.mobileLink}`}
-                    to={hasSubmenu === true ? '' : navObject.menuLink}
-                    onClick={() => {
-                      if (hasSubmenu) {
-                        setDepth(1);
-                      }
-                      return;
-                    }}
-                  >
-                    {navObject.menuLabel}
-                    {hasSubmenu && <NavigateNextIcon/>}
-                  </Link>
-                );
-              })}
-              <div className={styles.navFooter}>
-                <Link to={!isAuthenticated ? '/signin' : '/favorites'}>
-                  <FavoriteBorderIcon/>
-                  Favorites (0)
-                </Link>
-              </div>
-            </div>
-          )}
+   
 
-          {depth === 1 &&
-            categoriesWithSub.map((menuItem) => {
-              return (
-                <Link
-                  key={menuItem.category.id}
-                  to={''}
-                  onClick={() => {
-                    setDepth(2);
-                    setSubMenu(menuItem);
-                    return;
-                  }}
-                  className={`${styles.mobileLink}`}
-                >
-                  {menuItem.category.name}
-                  <NavigateNextIcon/>
-                </Link>
-              );
-            })}
-
-          {depth === 2 && subMenu && (
-            subMenu.subCategories.map((subMenuItem) => {
-              return (
-                <Link
-                  key={subMenuItem.id}
-                  to={`${filterPathName}/${subMenu.category.name}/${subMenuItem.name}`}
-                  className={`${styles.edgeLink}`}
-                >
-                  {subMenuItem.name}
-                </Link>
-              );
-            })
-          )}
 
           {depth === -1 && (
             <>
-              <div>
-                {/* no need to check for isAuthenticated , this depth will not be shown if not authenticated */}
-                <Link to={'/account/orders/'} className={styles.mobileLink}>
-                  Orders
-                </Link>
-                <Link to={'/account/address/'} className={styles.mobileLink}>
-                  Addresses
-                </Link>
-                <Link to={'/account/settings/'} className={styles.mobileLink}>
-                  Settings
-                </Link>
-                <Link to={'/account/viewed/'} className={styles.mobileLink}>
-                  Recently Viewed
-                </Link>
-              </div>
+     
               <div className={styles.navFooter}>
                 <div
                   className={styles.logoutContainer}

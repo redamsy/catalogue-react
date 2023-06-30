@@ -33,9 +33,7 @@ const BlogPreview = memo((props: Props) => {
         role={'figure'}
       />
       <span className={styles.category}>{category}</span>
-      <h4 className={styles.title}>
-        <Link to={link}>{title}</Link>
-      </h4>
+
       {showExcerpt && <p className={styles.excerpt}>{excerpt}</p>}
     </div>
   );

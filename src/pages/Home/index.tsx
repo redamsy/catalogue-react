@@ -393,17 +393,7 @@ const IndexPage = () => {
               image={'https://drive.google.com/file/d/1x9543mg8j0vBTirLkhFm1WP4889TL5IZ/view?usp=sharing'}
               title={`-50% off \n All Essentials`}
             />
-            {loadingData ?
-              <></>
-            :
-              <div className={styles.linkContainers}>
-                {categoriesWithSubFilters.slice(0, 2).map((cat, index) => (
-                  <span key={index}>
-                    <Link to={`/shop/${cat.category.name}`}>{cat.category.name}</Link>
-                  </span>
-                ))}
-              </div>
-            }
+      
           </div>
 
           {/* Quote */}
