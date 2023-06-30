@@ -119,7 +119,7 @@ export const generateFilteredProducts = (filterState: Filter[], detailedProducts
   // if nothing is selected return all
   if(sCategories.length === 0 && sSizes.length === 0 && sColors.length === 0) return detailedProducts;
 
-  return detailedProducts.filter((product) => {
+  const result = detailedProducts.filter((product) => {
     const { pSCCs, galleries } = product;
 
     const categoryMatch = sCategories.length === 0 || pSCCs.some((pSCC) =>
@@ -128,12 +128,35 @@ export const generateFilteredProducts = (filterState: Filter[], detailedProducts
       )
     );
 
-    const sizeColorMatch = galleries.some((gallery) => 
+    const sizeColorMatch = (sSizes.length === 0 && sColors.length === 0) || galleries.some((gallery) => 
       (sSizes.length === 0 || sSizes.some((el) => el === gallery.size.name))
       && (sColors.length === 0 || sColors.some((el) => el === gallery.color.name))
     );
 
     return categoryMatch && sizeColorMatch;
   });
+  return result;
 };
 
+export const searchProducts = (searchInput: string, detailedProducts: DetailedProduct[]) => {
+  function splitWords(value: string | undefined | null): string[] {
+    if (!value) {
+      return [];
+    }
+    return value.toLowerCase().split(" ");
+  }
+  const toBeSearchedWords = splitWords(searchInput);
+
+  function match(detailedProduct: DetailedProduct) {
+
+    const categoryNamesWords = detailedProduct.pSCCs.map((p) => p.category.name).join(" ");
+    const searchableWords: string[] = splitWords(detailedProduct.title).concat(splitWords(categoryNamesWords));
+
+    return toBeSearchedWords.every(
+      (t) => searchableWords.findIndex((s) => s.startsWith(t)) > -1
+    );
+  }
+  return detailedProducts.filter((item) => {
+    return searchInput.length === 0 || match(item);
+  });
+}
