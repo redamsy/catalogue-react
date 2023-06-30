@@ -74,7 +74,9 @@ const QuickView = memo((props: Props) => {
           </div>
         ) : <></>}
 
-        <Button />
+        <Button onClick={handleAddToBag} fullWidth level={'primary'}>
+          {buttonTitle}
+        </Button>
       </div>
     </div>
   );
