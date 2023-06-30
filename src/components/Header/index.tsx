@@ -21,6 +21,7 @@ import { useAuthState } from '../../context/authContext';
 import { useProductState } from '../../context/productsContext';
 import { CategoriesWithSub } from '../../models/Product';
 import CircularProgressPage from '../CircularProgressPage';
+import { searchProducts } from 'utils';
 
 export interface NavObject {
   menuLabel: string;
@@ -29,7 +30,7 @@ export interface NavObject {
 const Header = memo(() => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthState();
-  const { loadingData, categoriesWithSubFilters } = useProductState();
+  const { loadingData, categoriesWithSubFilters, detailedProducts } = useProductState();
 
   const [showMiniCart, setShowMiniCart] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -62,7 +63,8 @@ const Header = memo(() => {
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate(`/search?q=${search}`);
+    //TODO: find a way to set displayedProducts
+    //console.log('searchProducts',searchProducts(search, detailedProducts))
     setShowSearch(false);
   };
 
@@ -217,7 +219,8 @@ const Header = memo(() => {
                     role={'presentation'}
                     onClick={() => {
                       setShowSearch(false);
-                      navigate(`/search?q=${suggestion}`);
+                      //TODO: find a way to set displayedProducts
+                      //console.log('searchProducts',searchProducts(search, detailedProducts))
                       return;
                     }}
                     key={index}
