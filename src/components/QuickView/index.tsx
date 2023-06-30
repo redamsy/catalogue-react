@@ -1,6 +1,5 @@
 import React, { useState, useContext, memo, useMemo } from 'react';
 
-import Button from '../Button';
 import CurrencyAndRateFormatter from '../CurrencyAndRateFormatter';
 import SizeList from '../SizeList';
 import SwatchList from '../SwatchList';
@@ -74,9 +73,7 @@ const QuickView = memo((props: Props) => {
           </div>
         ) : <></>}
 
-        <Button onClick={handleAddToBag} fullWidth level={'primary'}>
-          {buttonTitle}
-        </Button>
+
       </div>
     </div>
   );
