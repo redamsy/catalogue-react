@@ -68,10 +68,6 @@
       "menuLink": "/shop"
     },
     {
-      "menuLabel": "journal",
-      "menuLink": "/blog"
-    },
-    {
       "menuLabel": "About",
       "menuLink": "/about"
     }

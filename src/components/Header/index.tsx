@@ -126,12 +126,14 @@ const Header = memo(() => {
                       {navObject.menuLabel}
                     </Link>
                   ))}
-                  <Link
-                    className={styles.navLink}
-                    to='dashboard'
-                  >
-                    Dashboard
-                  </Link>
+                  {isAuthenticated ? (
+                    <Link
+                      className={styles.navLink}
+                      to='dashboard'
+                    >
+                      Dashboard
+                    </Link>
+                  ) : <></>}
                 </nav>
               </div>
               <div
