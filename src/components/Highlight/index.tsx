@@ -33,7 +33,6 @@ const Highlight = memo((props: Props) => {
       <div className={styles.contentContainer}>
         <h3>{title}</h3>
         <p>{description}</p>
-        <Link to={link}>{textLink}</Link>
         <img
           className={styles.miniImage}
           alt={miniImageAlt}

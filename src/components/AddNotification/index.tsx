@@ -54,9 +54,7 @@ const AddNotification = memo((props : { openCart: () => void }) => {
         <Button level="primary" href="/cart">
           checkout
         </Button>
-        <div className={styles.linkContainer}>
-          <Link to={'/shop'}>continue shopping</Link>
-        </div>
+        
       </div>
     </div>
   );

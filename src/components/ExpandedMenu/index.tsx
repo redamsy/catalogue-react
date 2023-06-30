@@ -36,9 +36,7 @@ const ExpandedMenu = memo((props: { menu: CategoriesWithSub[];}) => {
                 {item.subCategories.map((link, linkIndex) => {
                   return (
                     <li key={linkIndex}>
-                      <Link className={styles.menuLink} to={`${filterPathName}/${item.category.name}/${link.name}`}>
-                        {link.name}
-                      </Link>
+                      llll
                     </li>
                   );
                 })}

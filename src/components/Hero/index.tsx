@@ -48,11 +48,7 @@ const Hero = memo((props: Props) => {
             {ctaText}
           </Button>
         )}
-        {ctaLink && ctaTo && (
-          <Link className={styles.ctaLink} to={ctaTo}>
-            {ctaLink}
-          </Link>
-        )}
+        
       </div>
     </div>
   );

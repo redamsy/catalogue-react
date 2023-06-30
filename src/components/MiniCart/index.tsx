@@ -41,9 +41,7 @@ const MiniCart = memo(() => {
           <Button onClick={() => navigate('/cart')} level={'primary'} fullWidth>
             checkout
           </Button>
-          <div className={styles.linkContainer}>
-            <Link to={'/shop'}>continue shopping</Link>
-          </div>
+        
         </div>
       </div>
     </div>
