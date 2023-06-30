@@ -75,7 +75,11 @@ const Button = memo(({
           {children}
         </a>
       )}
-      
+      {href && !target && (
+        <Link to={href} >
+          {children}
+        </Link>
+      )}
       {!href && (
         <button
           className={classOutput}
