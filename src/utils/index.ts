@@ -1,4 +1,4 @@
-import { Filter } from "components/CardController";
+import { Filter } from "../components/CardController";
 import { Color } from "../models/Color";
 import { CategoriesWithSub, DetailedProduct } from "../models/Product";
 import { Size } from "../models/Size";
@@ -11,6 +11,10 @@ export const validateEmail = (email: string) =>
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
     );
 
+
+// const GoogleDrivePublicImageUrl = 'https://drive.google.com/file/d/1IEnoQRH8mv5NqFNuQ8PWL2YGlnL1pl8Y/view?usp=sharing';  // this can be usp=drive_link or usp=sharing
+// const imageId = '1IEnoQRH8mv5NqFNuQ8PWL2YGlnL1pl8Y';
+// const imageSrc = `https://drive.google.com/thumbnail?id=${imageId}`;
 enum IMAGE_TYPE {
   uc = 'uc', //high quality
   thumbnail = 'thumbnail', //low quality
