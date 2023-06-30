@@ -57,7 +57,11 @@ const ProductCardGrid = memo((props: Props) => {
         </div>
       )}
 
-
+      {!!showQuickView && (
+        <Drawer visible={!!showQuickView} close={() => setShowQuickView(undefined)}>
+          <div>lllll</div>
+        </Drawer>
+      )}
     </div>
   );
 });
